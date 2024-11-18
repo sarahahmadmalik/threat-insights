@@ -72,7 +72,7 @@ export default function SignUpPage() {
       <div
         className="absolute inset-0 bg-gradient-to-t from-[#1A2237] via-[#1A2237] to-transparent opacity-60"
         style={{
-          backgroundImage: "url('/landing bg.png')",
+          backgroundImage: "url('/landing.svg')",
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundAttachment: "fixed",

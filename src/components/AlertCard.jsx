@@ -8,7 +8,7 @@ const AlertCard = ({ severity, id, date, description, onClick }) => {
   
     return (
       <div
-        className={`border-l-4 ${severityColors[severity]} p-4 mb-4 bg-white shadow rounded cursor-pointer`}
+        className={`border-l-4 ${severityColors[severity]} px-4 py-6 mb-4 bg-white shadow rounded cursor-pointer`}
         onClick={onClick}
       >
         <h3 className="text-lg font-bold">{severity}</h3>
