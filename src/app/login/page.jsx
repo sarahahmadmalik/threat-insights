@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
@@ -12,6 +13,7 @@ export default function LoginPage() {
     username: false,
     password: false,
   });
+  const router = useRouter();
 
   const validateUsername = () => {
     if (!username) {
@@ -41,8 +43,9 @@ export default function LoginPage() {
       username: true,
       password: true,
     });
-    validateUsername();
-    validatePassword();
+    // validateUsername();
+    // validatePassword();
+    router.push("/customer/home");
   };
 
   return (
@@ -79,10 +82,12 @@ export default function LoginPage() {
                     placeholder="Username"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    onBlur={() => setIsTouched((prev) => ({ ...prev, username: true }))}
+                    onBlur={() =>
+                      setIsTouched((prev) => ({ ...prev, username: true }))
+                    }
                     className={`w-full px-9 py-3 rounded-md bg-gray-800 text-white focus:outline-none transition-all duration-300 ease-in-out ${
-                      (errors.username && isTouched.username) 
-                        ? "ring-2 ring-red-500" 
+                      errors.username && isTouched.username
+                        ? "ring-2 ring-red-500"
                         : "focus:ring-2 focus:ring-blue-500"
                     }`}
                   />
@@ -96,7 +101,9 @@ export default function LoginPage() {
                   </span>
                 </div>
                 {errors.username && isTouched.username && (
-                  <p className="text-sm text-red-500 mt-2 ">{errors.username}</p>
+                  <p className="text-sm text-red-500 mt-2 ">
+                    {errors.username}
+                  </p>
                 )}
               </div>
 
@@ -108,9 +115,11 @@ export default function LoginPage() {
                     placeholder="Password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    onBlur={() => setIsTouched((prev) => ({ ...prev, password: true }))}
+                    onBlur={() =>
+                      setIsTouched((prev) => ({ ...prev, password: true }))
+                    }
                     className={`w-full px-9 py-3 rounded-md bg-gray-800 text-white focus:outline-none transition-all duration-300 ease-in-out ${
-                      (errors.password && isTouched.password)
+                      errors.password && isTouched.password
                         ? "ring-2 ring-red-500"
                         : "focus:ring-2 focus:ring-blue-500"
                     }`}
@@ -125,7 +134,9 @@ export default function LoginPage() {
                   </span>
                 </div>
                 {errors.password && isTouched.password && (
-                  <p className="text-sm text-red-500 mt-2 ">{errors.password}</p>
+                  <p className="text-sm text-red-500 mt-2 ">
+                    {errors.password}
+                  </p>
                 )}
               </div>
 
