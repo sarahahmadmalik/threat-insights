@@ -173,7 +173,7 @@ export default function LoginPage() {
               </p>
             </div>
             {/* Notes Section */}
-            <div className="pt-6 text-sm text-gray-500">
+            {/* <div className="pt-6 text-sm text-gray-500">
               <p>** NOTES **</p>
               <ul className="list-disc ml-4">
                 <li>Must be MFA/2FA for all users</li>
@@ -181,7 +181,7 @@ export default function LoginPage() {
                 <li>Must withstand brute force attacks</li>
                 <li>Use generic error messages</li>
               </ul>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

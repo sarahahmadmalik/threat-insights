@@ -8,7 +8,11 @@ export default function SignUpPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [errors, setErrors] = useState({ username: "", password: "", confirmPassword: "" });
+  const [errors, setErrors] = useState({
+    username: "",
+    password: "",
+    confirmPassword: "",
+  });
   const [isTouched, setIsTouched] = useState({
     username: false,
     password: false,
@@ -24,13 +28,15 @@ export default function SignUpPage() {
   };
 
   const validatePassword = () => {
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
     if (!password) {
       setErrors((prev) => ({ ...prev, password: "Password is required." }));
     } else if (!passwordRegex.test(password)) {
       setErrors((prev) => ({
         ...prev,
-        password: "Password must be at least 6 characters, including one uppercase letter, one lowercase letter, one number, and one special character.",
+        password:
+          "Password must be at least 6 characters, including one uppercase letter, one lowercase letter, one number, and one special character.",
       }));
     } else {
       setErrors((prev) => ({ ...prev, password: "" }));
@@ -39,7 +45,10 @@ export default function SignUpPage() {
 
   const validateConfirmPassword = () => {
     if (confirmPassword !== password) {
-      setErrors((prev) => ({ ...prev, confirmPassword: "Passwords do not match." }));
+      setErrors((prev) => ({
+        ...prev,
+        confirmPassword: "Passwords do not match.",
+      }));
     } else {
       setErrors((prev) => ({ ...prev, confirmPassword: "" }));
     }
@@ -92,9 +101,11 @@ export default function SignUpPage() {
                     placeholder="Username"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    onBlur={() => setIsTouched((prev) => ({ ...prev, username: true }))}
+                    onBlur={() =>
+                      setIsTouched((prev) => ({ ...prev, username: true }))
+                    }
                     className={`w-full px-9 py-3 rounded-md bg-gray-800 text-white focus:outline-none transition-all duration-300 ease-in-out ${
-                      (errors.username && isTouched.username)
+                      errors.username && isTouched.username
                         ? "ring-2 ring-red-500"
                         : "focus:ring-2 focus:ring-blue-500"
                     }`}
@@ -121,9 +132,11 @@ export default function SignUpPage() {
                     placeholder="Password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    onBlur={() => setIsTouched((prev) => ({ ...prev, password: true }))}
+                    onBlur={() =>
+                      setIsTouched((prev) => ({ ...prev, password: true }))
+                    }
                     className={`w-full px-9 py-3 rounded-md bg-gray-800 text-white focus:outline-none transition-all duration-300 ease-in-out ${
-                      (errors.password && isTouched.password)
+                      errors.password && isTouched.password
                         ? "ring-2 ring-red-500"
                         : "focus:ring-2 focus:ring-blue-500"
                     }`}
@@ -153,9 +166,14 @@ export default function SignUpPage() {
                       setConfirmPassword(e.target.value);
                       validateConfirmPassword(); // Validate on change
                     }}
-                    onBlur={() => setIsTouched((prev) => ({ ...prev, confirmPassword: true }))}
+                    onBlur={() =>
+                      setIsTouched((prev) => ({
+                        ...prev,
+                        confirmPassword: true,
+                      }))
+                    }
                     className={`w-full px-9 py-3 rounded-md bg-gray-800 text-white focus:outline-none transition-all duration-300 ease-in-out ${
-                      (errors.confirmPassword && isTouched.confirmPassword)
+                      errors.confirmPassword && isTouched.confirmPassword
                         ? "ring-2 ring-red-500"
                         : "focus:ring-2 focus:ring-blue-500"
                     }`}
@@ -170,7 +188,9 @@ export default function SignUpPage() {
                   </span>
                 </div>
                 {errors.confirmPassword && isTouched.confirmPassword && (
-                  <p className="text-sm text-red-500 mt-2">{errors.confirmPassword}</p>
+                  <p className="text-sm text-red-500 mt-2">
+                    {errors.confirmPassword}
+                  </p>
                 )}
               </div>
 
@@ -193,7 +213,7 @@ export default function SignUpPage() {
               </p>
             </div>
             {/* Notes Section */}
-            <div className="pt-6 text-sm text-gray-500">
+            {/* <div className="pt-6 text-sm text-gray-500">
               <p>** NOTES **</p>
               <ul className="list-disc ml-4">
                 <li>Must be MFA/2FA for all users</li>
@@ -201,7 +221,7 @@ export default function SignUpPage() {
                 <li>Must withstand brute force attacks</li>
                 <li>Use generic error messages</li>
               </ul>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

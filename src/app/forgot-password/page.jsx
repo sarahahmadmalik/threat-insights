@@ -14,7 +14,10 @@ export default function ForgotPasswordPage() {
     if (!email) {
       setErrors((prev) => ({ ...prev, email: "Email is required." }));
     } else if (!emailRegex.test(email)) {
-      setErrors((prev) => ({ ...prev, email: "Please enter a valid email address." }));
+      setErrors((prev) => ({
+        ...prev,
+        email: "Please enter a valid email address.",
+      }));
     } else {
       setErrors((prev) => ({ ...prev, email: "" }));
     }
@@ -61,9 +64,11 @@ export default function ForgotPasswordPage() {
                     placeholder="Enter your email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    onBlur={() => setIsTouched((prev) => ({ ...prev, email: true }))}
+                    onBlur={() =>
+                      setIsTouched((prev) => ({ ...prev, email: true }))
+                    }
                     className={`w-full px-9 py-3 rounded-md bg-gray-800 text-white focus:outline-none transition-all duration-300 ease-in-out ${
-                      (errors.email && isTouched.email)
+                      errors.email && isTouched.email
                         ? "ring-2 ring-red-500"
                         : "focus:ring-2 focus:ring-blue-500"
                     }`}
@@ -101,14 +106,14 @@ export default function ForgotPasswordPage() {
               </p>
             </div>
             {/* Notes Section */}
-            <div className="pt-6 text-sm text-gray-500">
+            {/* <div className="pt-6 text-sm text-gray-500">
               <p>** NOTES **</p>
               <ul className="list-disc ml-4">
                 <li>Ensure the email provided is registered in our system</li>
                 <li>If no email is found, please contact support</li>
                 <li>Check your spam folder if the email does not arrive</li>
               </ul>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
