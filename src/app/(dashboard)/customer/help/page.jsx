@@ -3,17 +3,23 @@
 import Image from "next/image";
 import toast, { Toaster } from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef } from "react";
-import Quill from "quill";
+import { useEffect, useRef, useState } from "react";
+import dynamic from "next/dynamic";
+
+// Dynamically import the Quill editor, only in the client side to avoid SSR issues
+const Quill = dynamic(() => import("quill"), { ssr: false });
 import "quill/dist/quill.snow.css";
 
 export default function SupportTicket() {
   const router = useRouter();
   const quillRef = useRef(null); // Ref for the Quill editor container
+  const fileInputRef = useRef(null); // Ref for the file input
+
+  const [file, setFile] = useState(null); // State to manage the file upload
 
   useEffect(() => {
-    if (quillRef.current) {
-      // Initialize Quill editor
+    if (quillRef.current && Quill) {
+      // Initialize Quill editor only on the client side
       const quill = new Quill(quillRef.current, {
         theme: "snow", // Quill's snow theme
         placeholder: "Enter issue details",
@@ -21,7 +27,6 @@ export default function SupportTicket() {
           toolbar: [
             ["bold", "italic", "underline"], // Text formatting
             [{ list: "ordered" }, { list: "bullet" }], // Lists
-
             ["link", "image"], // Media
           ],
         },

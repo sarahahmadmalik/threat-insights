@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import { Toaster } from "react-hot-toast";
 import { useRouter } from "next/navigation";
@@ -179,10 +179,12 @@ export default function Profile() {
                   />
                 </div>
                 <div className="flex items-center">
-                  <img
+                  <Image
                     src={profile.profilePic}
                     alt="Profile Pic"
-                    className="w-20 h-20 rounded-full object-cover"
+                    width={80} // Set the width (20 * 4 for scaling)
+                    height={80} // Set the height (20 * 4 for scaling)
+                    className="rounded-full object-cover"
                   />
                   <input
                     type="file"

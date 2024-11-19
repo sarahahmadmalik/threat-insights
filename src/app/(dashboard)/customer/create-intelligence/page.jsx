@@ -3,10 +3,13 @@
 import { useRouter } from "next/navigation";
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import Quill from "quill";
-import "quill/dist/quill.snow.css";
 import Select from "@/components/ui/Select";
 import toast, { Toaster } from "react-hot-toast"; // Import toast
+import dynamic from "next/dynamic";
+
+// Dynamically import Quill with { ssr: false } to disable server-side rendering
+const Quill = dynamic(() => import("quill"), { ssr: false });
+import "quill/dist/quill.snow.css";
 
 const CreateIntelligence = () => {
   const router = useRouter();
@@ -31,43 +34,46 @@ const CreateIntelligence = () => {
 
   // Initialize Quill editor instances
   useEffect(() => {
-    const overviewEditor = new Quill(overviewEditorRef.current, {
-      theme: "snow",
-      placeholder: "Enter overview...",
-      modules: {
-        toolbar: [
-          [{ font: [] }],
-          [{ list: "ordered" }, { list: "bullet" }],
-          [{ align: [] }],
-          ["bold", "italic", "underline", "strike"],
-          [{ color: [] }, { background: [] }],
-          ["link"],
-        ],
-      },
-    });
+    if (typeof window !== "undefined") {
+      // Initialize Quill only in the client-side environment
+      const overviewEditor = new Quill(overviewEditorRef.current, {
+        theme: "snow",
+        placeholder: "Enter overview...",
+        modules: {
+          toolbar: [
+            [{ font: [] }],
+            [{ list: "ordered" }, { list: "bullet" }],
+            [{ align: [] }],
+            ["bold", "italic", "underline", "strike"],
+            [{ color: [] }, { background: [] }],
+            ["link"],
+          ],
+        },
+      });
 
-    overviewEditor.on("text-change", () => {
-      setOverview(overviewEditor.root.innerHTML); // Update the state with HTML content
-    });
+      overviewEditor.on("text-change", () => {
+        setOverview(overviewEditor.root.innerHTML); // Update the state with HTML content
+      });
 
-    const iocEditor = new Quill(iocEditorRef.current, {
-      theme: "snow",
-      placeholder: "Enter IOC's...",
-      modules: {
-        toolbar: [
-          [{ font: [] }],
-          [{ list: "ordered" }, { list: "bullet" }],
-          [{ align: [] }],
-          ["bold", "italic", "underline", "strike"],
-          [{ color: [] }, { background: [] }],
-          ["link"],
-        ],
-      },
-    });
+      const iocEditor = new Quill(iocEditorRef.current, {
+        theme: "snow",
+        placeholder: "Enter IOC's...",
+        modules: {
+          toolbar: [
+            [{ font: [] }],
+            [{ list: "ordered" }, { list: "bullet" }],
+            [{ align: [] }],
+            ["bold", "italic", "underline", "strike"],
+            [{ color: [] }, { background: [] }],
+            ["link"],
+          ],
+        },
+      });
 
-    iocEditor.on("text-change", () => {
-      setIoc(iocEditor.root.innerHTML); // Update the state with HTML content
-    });
+      iocEditor.on("text-change", () => {
+        setIoc(iocEditor.root.innerHTML); // Update the state with HTML content
+      });
+    }
   }, []);
 
   // Handle form submission
@@ -274,17 +280,17 @@ const CreateIntelligence = () => {
             />
           </div>
 
-          {/* Related CVEs */}
+          {/* Related CVE */}
           <div>
             <label
               htmlFor="relatedCve"
               className="text-md text-[#2F90B0] mb-4 font-semibold"
             >
-              Related CVEs
+              Related CVE
             </label>
             <Select
               options={options.relatedCve}
-              placeholder="Select Related CVEs"
+              placeholder="Select Related CVE"
               onSelect={setRelatedCve}
               className="w-full"
             />
@@ -307,43 +313,44 @@ const CreateIntelligence = () => {
           </div>
         </div>
 
-        {/* Right Section: Quill Editors */}
-        <div className="col-span-2 space-y-5 sm:ml-[3rem]">
+        {/* Right Section: Text Editors */}
+        <div className="col-span-2">
           {/* Overview Editor */}
-          <div>
-            <h4 className="font-bold text-[#2F90B0] text-[22px] mb-2">
-              Add Overview
-            </h4>
-            <div
-              ref={overviewEditorRef}
-              className="border p-4 rounded-md h-[200px]"
-            ></div>
-          </div>
-
-          <div>
-            <h4 className="font-bold text-[#2F90B0] text-[22px] mb-2">
-              Add Indicators (IOC's)
-            </h4>
-            <div
-              ref={iocEditorRef}
-              className="border p-4 rounded-md h-[200px]"
-            ></div>
-          </div>
-
-          {/* Add Button */}
-          <div className="text-right">
-            <button
-              onClick={handleAdd}
-              className="bg-[#2F90B0] text-white px-6 py-2 rounded shadow"
+          <div className="space-y-4">
+            <label
+              htmlFor="overview"
+              className="text-md text-[#2F90B0] mb-4 font-semibold"
             >
-              ADD
-            </button>
+              Overview
+            </label>
+            <div ref={overviewEditorRef} className="border p-2"></div>
+          </div>
+
+          {/* IOC Editor */}
+          <div className="space-y-4">
+            <label
+              htmlFor="ioc"
+              className="text-md text-[#2F90B0] mb-4 font-semibold"
+            >
+              IOCs
+            </label>
+            <div ref={iocEditorRef} className="border p-2"></div>
           </div>
         </div>
       </div>
 
-      {/* Toast Notification */}
-      <Toaster position="top-center" />
+      {/* Submit Button */}
+      <div className="flex justify-end mt-6">
+        <button
+          onClick={handleAdd}
+          className="bg-[#2F90B0] text-white py-2 px-4 rounded-md"
+        >
+          Save Intelligence
+        </button>
+      </div>
+
+      {/* Toast Notifications */}
+      <Toaster />
     </div>
   );
 };
