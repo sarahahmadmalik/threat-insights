@@ -19,13 +19,16 @@ body {
   background: var(--background);
   font-family: Inter, Helvetica, sans-serif;
   box-sizing: border-box;
+
 }
 
-.ql-editor{
+
+
+.ql-editor {
   font-family: Inter !important;
   padding-left: 0 !important;
 }
 
-.ql-container{
-  min-height:170px !important;
+.ql-container {
+  min-height: 170px !important;
 }

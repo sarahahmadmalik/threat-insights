@@ -60,8 +60,12 @@ const ConfigurePage = () => {
     }
   };
 
+  const handleRemove = (list, setList, item) => {
+    setList(list.filter((i) => i !== item));
+  };
+
   return (
-    <div className="min-h-screen bg-white text-black flex flex-col items-center px-5 sm:p-10 ">
+    <div className="min-h-screen bg-white text-black flex flex-col items-center px-5 sm:p-10">
       {/* Back Button */}
       <button
         className="mb-6 self-start"
@@ -103,14 +107,24 @@ const ConfigurePage = () => {
                   onSelect={handleAddIndustry}
                   className="w-full"
                 />
-                <button className="bg-[#2F90B0] text-white px-4 py-2 rounded">
-                  ADD
-                </button>
               </div>
               {industries.length > 0 && (
                 <ul className="mt-2 text-gray-700">
                   {industries.map((item, index) => (
-                    <li key={index}>{item}</li>
+                    <li
+                      key={index}
+                      className="flex justify-between items-center"
+                    >
+                      {item}
+                      <button
+                        onClick={() =>
+                          handleRemove(industries, setIndustries, item)
+                        }
+                        className="text-red-600 hover:text-red-800"
+                      >
+                        Remove
+                      </button>
+                    </li>
                   ))}
                 </ul>
               )}
@@ -127,7 +141,7 @@ const ConfigurePage = () => {
                   placeholder="Europe"
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
-                  className="w-full p-3 border-gray-300 border focus:ring-2 focus:ring-[#2F90B0] rounded-md text-black focus:outline-none"
+                  className="w-full p-3 transition-all duration-300 border-gray-300 border focus:ring-2 focus:ring-[#2F90B0] rounded-md"
                 />
                 <button
                   onClick={handleAddLocation}
@@ -139,36 +153,20 @@ const ConfigurePage = () => {
               {locations.length > 0 && (
                 <ul className="mt-2 text-gray-700">
                   {locations.map((loc, index) => (
-                    <li key={index}>{loc}</li>
-                  ))}
-                </ul>
-              )}
-            </div>
-
-            {/* Notification Settings */}
-            <div>
-              <label className="text-[#2F90B0] font-semibold block mb-2">
-                Notification Settings
-              </label>
-              <div className="flex items-center gap-4">
-                <input
-                  type="email"
-                  placeholder="Add Email Address"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full p-3 border-gray-300 border focus:ring-2 focus:ring-[#2F90B0] rounded-md text-black focus:outline-none"
-                />
-                <button
-                  onClick={handleAddEmail}
-                  className="bg-[#2F90B0] text-white px-4 py-2 rounded"
-                >
-                  ADD
-                </button>
-              </div>
-              {emails.length > 0 && (
-                <ul className="mt-2 text-gray-700">
-                  {emails.map((em, index) => (
-                    <li key={index}>{em}</li>
+                    <li
+                      key={index}
+                      className="flex justify-between items-center"
+                    >
+                      {loc}
+                      <button
+                        onClick={() =>
+                          handleRemove(locations, setLocations, loc)
+                        }
+                        className="text-red-600 hover:text-red-800"
+                      >
+                        Remove
+                      </button>
+                    </li>
                   ))}
                 </ul>
               )}
@@ -178,68 +176,7 @@ const ConfigurePage = () => {
 
         {/* Assets */}
         <div>
-          <h2 className="text-center text-[22px] font-[300] uppercase mb-6">
-            ASSETS
-          </h2>
-          <div className="space-y-6">
-            {/* Add/Remove Domains */}
-            <div>
-              <label className="text-[#2F90B0] font-semibold block mb-2">
-                Add / Remove Domain(s)
-              </label>
-              <div className="flex items-center gap-4">
-                <input
-                  type="text"
-                  placeholder="example.com"
-                  value={domain}
-                  onChange={(e) => setDomain(e.target.value)}
-                  className="w-full p-3 border-gray-300 border focus:ring-2 focus:ring-[#2F90B0] rounded-md text-black focus:outline-none"
-                />
-                <button
-                  onClick={handleAddDomain}
-                  className="bg-[#2F90B0] text-white px-4 py-2 rounded"
-                >
-                  ADD
-                </button>
-              </div>
-              {domains.length > 0 && (
-                <ul className="mt-2 text-gray-700">
-                  {domains.map((dom, index) => (
-                    <li key={index}>{dom}</li>
-                  ))}
-                </ul>
-              )}
-            </div>
-
-            {/* Add/Remove Static IPs */}
-            <div>
-              <label className="text-[#2F90B0] font-semibold block mb-2">
-                Add / Remove Static IPs
-              </label>
-              <div className="flex items-center gap-4">
-                <input
-                  type="text"
-                  placeholder="192.168.1.1"
-                  value={ip}
-                  onChange={(e) => setIP(e.target.value)}
-                  className="w-full p-3 border-gray-300 border focus:ring-2 focus:ring-[#2F90B0] rounded-md text-black focus:outline-none"
-                />
-                <button
-                  onClick={handleAddIP}
-                  className="bg-[#2F90B0] text-white px-4 py-2 rounded"
-                >
-                  ADD
-                </button>
-              </div>
-              {ips.length > 0 && (
-                <ul className="mt-2 text-gray-700">
-                  {ips.map((staticIP, index) => (
-                    <li key={index}>{staticIP}</li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          </div>
+          {/* Additional sections for email, domains, IPs */}
         </div>
       </div>
     </div>

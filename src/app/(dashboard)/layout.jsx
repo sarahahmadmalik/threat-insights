@@ -2,9 +2,11 @@
 import Image from "next/image";
 import { useState } from "react";
 import { createPortal } from "react-dom";
+import { useRouter } from "next/navigation";
 
 export default function Layout({ children }) {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const router = useRouter();
 
   return (
     <div className="min-h-screen relative text-white">
@@ -58,10 +60,16 @@ export default function Layout({ children }) {
                 }`}
               >
                 <ul>
-                  <li className="px-4 py-2 hover:bg-gray-200 cursor-pointer">
+                  <li
+                    onClick={() => router.push("/customer/profile")}
+                    className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
+                  >
                     Profile
                   </li>
-                  <li className="px-4 py-2 hover:bg-gray-200 cursor-pointer">
+                  <li
+                    onClick={() => router.push("/")}
+                    className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
+                  >
                     Logout
                   </li>
                 </ul>

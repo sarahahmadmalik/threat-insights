@@ -36,7 +36,7 @@ const CreateIntelligence = () => {
       placeholder: "Enter overview...",
       modules: {
         toolbar: [
-          [{ header: "1" }, { header: "2" }, { font: [] }],
+          [{ font: [] }],
           [{ list: "ordered" }, { list: "bullet" }],
           [{ align: [] }],
           ["bold", "italic", "underline", "strike"],
@@ -55,7 +55,7 @@ const CreateIntelligence = () => {
       placeholder: "Enter IOC's...",
       modules: {
         toolbar: [
-          [{ header: "1" }, { font: [] }],
+          [{ font: [] }],
           [{ list: "ordered" }, { list: "bullet" }],
           [{ align: [] }],
           ["bold", "italic", "underline", "strike"],
@@ -131,7 +131,10 @@ const CreateIntelligence = () => {
     <div className="sm:p-10 p-5 bg-white rounded-md text-black">
       {/* Header */}
       <div>
-        <button onClick={() => router.push("/reports")} className="mb-3">
+        <button
+          onClick={() => router.push("/customer/reports")}
+          className="mb-3"
+        >
           <Image src="/icons/back.svg" width={40} height={40} alt="back-icon" />
         </button>
         <h3 className="text-[#2F90B0] font-[300] mt-2 uppercase text-[19px] text-center sm:text-left sm:text-[26px] mb-5 ml-5">
@@ -317,7 +320,6 @@ const CreateIntelligence = () => {
             ></div>
           </div>
 
-          {/* Indicators Editor */}
           <div>
             <h4 className="font-bold text-[#2F90B0] text-[22px] mb-2">
               Add Indicators (IOC's)
