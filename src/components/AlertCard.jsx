@@ -1,14 +1,14 @@
 const AlertCard = ({ severity, id, date, description, onClick }) => {
     const severityColors = {
-      CRITICAL: 'border-purple-500',
-      HIGH: 'border-red-500',
-      MEDIUM: 'border-yellow-500',
-      LOW: 'border-green-500',
+      CRITICAL: 'border-[#D8CBFD]',
+      HIGH: 'border-[#F4B1B1]',
+      MEDIUM: 'border-[#F0D88F]',
+      LOW: 'border-[#BBEEA9]',
     };
   
     return (
       <div
-        className={`border-l-4 ${severityColors[severity]} px-4 py-6 mb-4 bg-white shadow rounded cursor-pointer`}
+        className={`border-l-8 ${severityColors[severity]} px-4 py-6 mb-4 bg-white shadow rounded cursor-pointer`}
         onClick={onClick}
       >
         <h3 className="text-lg font-bold">{severity}</h3>
