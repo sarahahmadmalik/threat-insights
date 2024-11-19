@@ -1,82 +1,84 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
-export default function ProfilePage() {
+export default function Profile() {
   const router = useRouter();
+
+  const [activeTab, setActiveTab] = useState("profile");
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  const [password, setPassword] = useState("12235");
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
+  const [verificationCode, setVerificationCode] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmNewPassword, setConfirmNewPassword] = useState("");
+  const [otpSent, setOtpSent] = useState(false);
+  const [verificationSuccess, setVerificationSuccess] = useState(false);
+  const [isEditing, setIsEditing] = useState(false); // New state to toggle edit mode
+
   const [profile, setProfile] = useState({
     name: "John Doe",
-    email: "johndoe@example.com",
-    bio: "This is a sample bio",
-    avatar: "/icons/user.svg",
-    password: "********", // Placeholder for password
+    email: "john.doe@example.com",
+    phone: "123-456-7890",
+    profilePic: "/icons/user.svg", // Placeholder image
   });
-  const [isEditing, setIsEditing] = useState(false);
-  const [isEditingPassword, setIsEditingPassword] = useState(false);
-  const [newPassword, setNewPassword] = useState("");
-  const [passwordVerificationSent, setPasswordVerificationSent] = useState(false);
 
-  // Handle input changes
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setProfile((prevProfile) => ({
-      ...prevProfile,
-      [name]: value,
-    }));
+  const handlePasswordChange = (e) => setPassword(e.target.value);
+  const handleNewPasswordChange = (e) => setNewPassword(e.target.value);
+  const handleConfirmPasswordChange = (e) =>
+    setConfirmNewPassword(e.target.value);
+  const handleVerificationCodeChange = (e) =>
+    setVerificationCode(e.target.value);
+
+  const handleChangePasswordClick = () => {
+    setIsChangingPassword(true);
+    setOtpSent(false);
+    setVerificationSuccess(false);
   };
 
-  // Handle profile picture change
-  const handleImageChange = (e) => {
+  const handleSendVerificationCode = () => {
+    setOtpSent(true);
+  };
+
+  const handleVerifyCode = () => {
+    if (verificationCode === "123456") {
+      setVerificationSuccess(true);
+    } else {
+      alert("Invalid OTP");
+    }
+  };
+
+  const handleSubmitProfile = (e) => {
+    e.preventDefault();
+    alert("Profile saved successfully");
+    setIsEditing(false); // Disable edit mode after saving
+  };
+
+  const handleProfilePicChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setProfile((prevProfile) => ({
-          ...prevProfile,
-          avatar: reader.result,
-        }));
+        setProfile({ ...profile, profilePic: reader.result });
       };
       reader.readAsDataURL(file);
     }
   };
 
-  // Handle password change (new password)
-  const handlePasswordChange = (e) => {
-    setNewPassword(e.target.value);
-  };
-
-  // Handle password verification code sending
-  const handleSendVerificationCode = () => {
-    // Simulate sending a verification code to email
-    setPasswordVerificationSent(true);
-    toast.success("Verification code sent to your email!", {
-      duration: 4000,
-    });
-  };
-
-  // Handle form submission
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    toast.success("Profile updated successfully!", {
-      duration: 4000,
-    });
-    setIsEditing(false);
-  };
-
   return (
-    <div className="sm:p-10 p-5 bg-white rounded-md text-black">
-      {/* Include the Toaster for displaying notifications */}
-      <Toaster position="top-right" reverseOrder={false} />
+    <div className="sm:p-10 p-5 bg-white min-h-screen rounded-md text-black">
+      <Toaster position="top-center" reverseOrder={false} />
+
       <div>
         <button onClick={() => router.push("/customer/home")} className="mb-3">
           <Image src="/icons/back.svg" width={40} height={40} alt="back-icon" />
         </button>
       </div>
 
-      <div className="w-full flex sm:items-start flex-col sm:flex-row sm:gap-x-5 justify-start">
+      <div className="w-full flex flex-col sm:flex-row sm:items-start sm:gap-x-7 justify-start">
         {/* Profile Header */}
         <div className="flex items-center gap-x-2 mb-4 ml-6">
           <h3 className="text-[#2F90B0] font-[300] mt-2 uppercase text-[26px]">
@@ -84,165 +86,259 @@ export default function ProfilePage() {
           </h3>
         </div>
 
-        <div className="w-full max-w-lg sm:ml-6 flex flex-col items-start">
-          <h1 className="text-[20px] text-center sm:text-left sm:text-[26px] uppercase font-[400] text-gray-800">
-            {isEditing ? "Edit Profile" : "View Profile"}
-          </h1>
+        {/* Tabs */}
+        <div className="sm:ml-5">
+          <div className="flex mb-4 ">
+            <button
+              className={`px-4 py-2 text-md uppercase font-[400] ${
+                activeTab === "profile" ? "border-b-2 border-[#2F90B0]" : ""
+              }`}
+              onClick={() => setActiveTab("profile")}
+            >
+              Profile
+            </button>
+            <button
+              className={`ml-4 px-4 py-2 text-md uppercase font-[400] ${
+                activeTab === "password" ? "border-b-2  border-[#2F90B0]" : ""
+              }`}
+              onClick={() => setActiveTab("password")}
+            >
+              Password
+            </button>
+          </div>
 
-          {/* Profile Form */}
-          <form className="mt-6 space-y-4 w-full" onSubmit={handleSubmit}>
-            {/* Name */}
-            <div>
-              <label
-                htmlFor="name"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Name
-              </label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={profile.name}
-                onChange={handleChange}
-                className="mt-1 block w-full px-3 py-2 border rounded-lg shadow-sm focus:ring-blue-500 focus:ring-2 transition-all duration-300 ease-in-out focus:outline-none border-gray-300"
-                placeholder="Enter your name"
-                disabled={!isEditing}
-                required
-              />
-            </div>
+          {/* Profile Tab */}
+          {activeTab === "profile" && (
+            <form onSubmit={handleSubmitProfile}>
+              <div className="space-y-4 max-w-lg">
+                {/* Profile Picture */}
 
-            {/* Email */}
-            <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Email
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={profile.email}
-                onChange={handleChange}
-                className="mt-1 block w-full px-3 py-2 border rounded-lg shadow-sm focus:ring-blue-500 focus:ring-2 transition-all duration-300 ease-in-out focus:outline-none border-gray-300"
-                placeholder="Enter your email"
-                disabled={!isEditing}
-                required
-              />
-            </div>
+                {/* Name */}
+                <div>
+                  <label
+                    htmlFor="name"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Name
+                  </label>
+                  <input
+                    type="text"
+                    id="name"
+                    value={profile.name}
+                    onChange={(e) =>
+                      setProfile({ ...profile, name: e.target.value })
+                    }
+                    className="mt-1 block w-full px-3 py-2 border rounded-lg shadow-sm focus:ring-blue-500 focus:ring-2 transition-all duration-300 ease-in-out focus:outline-none border-gray-300"
+                    placeholder="Enter your name"
+                    required
+                    disabled={!isEditing} // Disable input when not editing
+                  />
+                </div>
 
-            {/* Bio */}
-            <div>
-              <label
-                htmlFor="bio"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Bio
-              </label>
-              <textarea
-                id="bio"
-                name="bio"
-                value={profile.bio}
-                onChange={handleChange}
-                className="mt-1 block w-full px-3 py-2 border rounded-lg shadow-sm focus:ring-blue-500 focus:ring-2 transition-all duration-300 ease-in-out focus:outline-none border-gray-300"
-                placeholder="Tell us about yourself"
-                disabled={!isEditing}
-              />
-            </div>
+                {/* Email */}
+                <div>
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    value={profile.email}
+                    onChange={(e) =>
+                      setProfile({ ...profile, email: e.target.value })
+                    }
+                    className="mt-1 block w-full px-3 py-2 border rounded-lg shadow-sm focus:ring-blue-500 focus:ring-2 transition-all duration-300 ease-in-out focus:outline-none border-gray-300"
+                    placeholder="Enter your email"
+                    required
+                    disabled={!isEditing} // Disable input when not editing
+                  />
+                </div>
 
-            {/* Profile Picture */}
-            <div>
-              <label
-                htmlFor="avatar"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Profile Picture
-              </label>
-              <div className="flex items-center gap-x-3">
-                <Image
-                  src={profile.avatar}
-                  width={80}
-                  height={80}
-                  alt="profile-avatar"
-                  className="rounded-full"
-                />
-                {isEditing && (
+                {/* Phone */}
+                <div>
+                  <label
+                    htmlFor="phone"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Phone
+                  </label>
+                  <input
+                    type="tel"
+                    id="phone"
+                    value={profile.phone}
+                    onChange={(e) =>
+                      setProfile({ ...profile, phone: e.target.value })
+                    }
+                    className="mt-1 block w-full px-3 py-2 border rounded-lg shadow-sm focus:ring-blue-500 focus:ring-2 transition-all duration-300 ease-in-out focus:outline-none border-gray-300"
+                    placeholder="Enter your phone number"
+                    required
+                    disabled={!isEditing} // Disable input when not editing
+                  />
+                </div>
+                <div className="flex items-center">
+                  <img
+                    src={profile.profilePic}
+                    alt="Profile Pic"
+                    className="w-20 h-20 rounded-full object-cover"
+                  />
                   <input
                     type="file"
-                    id="avatar"
                     accept="image/*"
-                    onChange={handleImageChange}
-                    className="block text-sm text-gray-500 focus:outline-none"
+                    onChange={handleProfilePicChange}
+                    disabled={!isEditing} // Disable file input when not editing
+                    className="ml-4 py-2 px-4 border border-gray-300 rounded-md"
                   />
-                )}
-              </div>
-            </div>
+                </div>
 
-            {/* Password */}
+                {/* Edit/Save Button */}
+                <div className="flex justify-between gap-x-4 mt-4">
+                  {isEditing ? (
+                    <button
+                      type="submit"
+                      className="bg-[#2F90B0] text-white px-6 py-2 rounded-lg"
+                    >
+                      Save
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => setIsEditing(true)} // Enable editing mode
+                      className="bg-[#2F90B0] text-white px-6 py-2 rounded-lg"
+                    >
+                      Edit
+                    </button>
+                  )}
+                </div>
+              </div>
+            </form>
+          )}
+
+          {/* Password Tab */}
+          {activeTab === "password" && (
             <div>
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Password
-              </label>
-              <div className="flex items-center gap-x-3">
-                {isEditingPassword ? (
-                  <>
+              <div className="space-y-4 max-w-lg">
+                {/* Current Password */}
+                <div>
+                  <label
+                    htmlFor="password"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Password
+                  </label>
+                  <div className="flex items-center">
                     <input
-                      type="password"
+                      type={passwordVisible ? "text" : "password"}
                       id="password"
-                      value={newPassword}
+                      value={password}
                       onChange={handlePasswordChange}
                       className="mt-1 block w-full px-3 py-2 border rounded-lg shadow-sm focus:ring-blue-500 focus:ring-2 transition-all duration-300 ease-in-out focus:outline-none border-gray-300"
-                      placeholder="Enter new password"
+                      placeholder="Enter your password"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setPasswordVisible(!passwordVisible)}
+                      className="ml-2 text-blue-500"
+                    >
+                      {passwordVisible ? "Hide" : "Show"}
+                    </button>
+                  </div>
+                  <div className=" my-4">
+                    <button
+                      type="button"
+                      onClick={handleChangePasswordClick}
+                      className="bg-[#2F90B0] text-white px-6 py-2 rounded-lg"
+                    >
+                      Change Password
+                    </button>
+                  </div>
+                </div>
+
+                {/* OTP Input */}
+                {isChangingPassword && !otpSent && (
+                  <div>
+                    <label
+                      htmlFor="verificationCode"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      Verification Code
+                    </label>
+                    <input
+                      type="text"
+                      id="verificationCode"
+                      value={verificationCode}
+                      onChange={handleVerificationCodeChange}
+                      className="mt-1 block w-full px-3 py-2 border rounded-lg shadow-sm focus:ring-blue-500 focus:ring-2 transition-all duration-300 ease-in-out focus:outline-none border-gray-300"
+                      placeholder="Enter OTP"
                     />
                     <button
                       type="button"
                       onClick={handleSendVerificationCode}
-                      className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+                      className="mt-2 bg-[#2F90B0] text-white px-6 py-2 rounded-lg"
                     >
-                      Send Verification Code
+                      Send OTP
                     </button>
-                  </>
-                ) : (
-                  <span>******</span>
+                  </div>
+                )}
+
+                {/* New Password Fields */}
+                {otpSent && !verificationSuccess && (
+                  <div>
+                    <div>
+                      <label
+                        htmlFor="newPassword"
+                        className="block text-sm font-medium text-gray-700"
+                      >
+                        New Password
+                      </label>
+                      <input
+                        type="password"
+                        id="newPassword"
+                        value={newPassword}
+                        onChange={handleNewPasswordChange}
+                        className="mt-1 block w-full px-3 py-2 border rounded-lg shadow-sm focus:ring-blue-500 focus:ring-2 transition-all duration-300 ease-in-out focus:outline-none border-gray-300"
+                        placeholder="Enter new password"
+                      />
+                    </div>
+
+                    <div>
+                      <label
+                        htmlFor="confirmNewPassword"
+                        className="block text-sm font-medium text-gray-700"
+                      >
+                        Confirm New Password
+                      </label>
+                      <input
+                        type="password"
+                        id="confirmNewPassword"
+                        value={confirmNewPassword}
+                        onChange={handleConfirmPasswordChange}
+                        className="mt-1 block w-full px-3 py-2 border rounded-lg shadow-sm focus:ring-blue-500 focus:ring-2 transition-all duration-300 ease-in-out focus:outline-none border-gray-300"
+                        placeholder="Confirm new password"
+                      />
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={handleVerifyCode}
+                      className="mt-2 bg-blue-500 text-white px-6 py-2 rounded-lg"
+                    >
+                      Verify OTP
+                    </button>
+                  </div>
+                )}
+
+                {/* Success Message */}
+                {verificationSuccess && (
+                  <div className="mt-4 text-green-500">
+                    Password changed successfully!
+                  </div>
                 )}
               </div>
-              {passwordVerificationSent && (
-                <div className="text-sm text-green-600 mt-2">
-                  Verification code has been sent to your email!
-                </div>
-              )}
-              <button
-                type="button"
-                onClick={() => setIsEditingPassword((prev) => !prev)}
-                className="mt-2 text-sm text-blue-600 hover:underline"
-              >
-                {isEditingPassword ? "Cancel Edit" : "Edit Password"}
-              </button>
             </div>
-
-            {/* Submit Button */}
-            <div className="flex gap-x-3">
-              <button
-                type="submit"
-                className="w-[150px] bg-[#2F90B0] text-white px-4 py-2 rounded-lg hover:bg-[#2F90B0] focus:outline-none focus:ring-2 focus:ring-[#2F90B0]"
-                disabled={!isEditing}
-              >
-                Save
-              </button>
-              <button
-                type="button"
-                onClick={() => setIsEditing((prev) => !prev)}
-                className="w-[150px] bg-gray-300 text-black px-4 py-2 rounded-lg hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300"
-              >
-                {isEditing ? "Cancel" : "Edit"}
-              </button>
-            </div>
-          </form>
+          )}
         </div>
       </div>
     </div>
