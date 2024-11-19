@@ -51,7 +51,7 @@ export default function Layout({ children }) {
           {isDropdownOpen &&
             createPortal(
               <div
-                className={`absolute z-50 right-8 top-16 bg-white text-black rounded shadow-lg w-48 transition-transform duration-300 ease-out ${
+                className={`absolute overflow-hidden z-50 right-8 top-16 bg-white text-black rounded shadow-lg w-48 transition-transform duration-300 ease-out ${
                   isDropdownOpen
                     ? "transform opacity-100 translate-y-0"
                     : "transform opacity-0 translate-y-4"

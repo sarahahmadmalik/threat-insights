@@ -21,12 +21,12 @@ export default function Home() {
 
   return (
     <div className="w-full flex justify-center">
-      <div className="grid z-20 bg-white bg-opacity-10 backdrop-blur-sm py-10 px-6 rounded-md grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid z-20 w-full sm:w-auto bg-white bg-opacity-10 backdrop-blur-sm py-10 px-6 rounded-md grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {dashboardCards.map((card, index) => (
           <Link
             key={index}
             href={card.href}
-            className="flex flex-col items-center justify-center w-[170px] bg-white p-6 rounded-lg shadow hover:bg-slate-200 transition cursor-pointer"
+            className="flex flex-col items-center justify-center sm:w-[170px] bg-white p-6 rounded-lg shadow hover:bg-slate-200 transition cursor-pointer"
           >
             <Image
               src={card.icon}

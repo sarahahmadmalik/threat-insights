@@ -38,7 +38,7 @@ const IntelligenceCard = ({
 
   const handleOpenButtonClick = () => {
     // Navigate to the page when the "Open" button is clicked
-    router.push(`/links/${id}`);
+    router.push(`/customer/intelligence/${id}`);
   };
 
   return (
