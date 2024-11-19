@@ -1,15 +1,15 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import React, { useState, useEffect, useRef } from "react";
-import Image from "next/image";
-import Select from "@/components/ui/Select";
-import toast, { Toaster } from "react-hot-toast"; // Import toast
+import React, { useState } from "react";
 import dynamic from "next/dynamic";
+import "react-quill-new/dist/quill.snow.css"; // Import Quill styles
+import Select from "@/components/ui/Select";
+import toast, { Toaster } from "react-hot-toast";
+import Image from "next/image";
 
-// Dynamically import Quill with { ssr: false } to disable server-side rendering
-const Quill = dynamic(() => import("quill"), { ssr: false });
-import "quill/dist/quill.snow.css";
+// Dynamically import ReactQuill
+const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 
 const CreateIntelligence = () => {
   const router = useRouter();
@@ -29,53 +29,6 @@ const CreateIntelligence = () => {
   const [relatedCve, setRelatedCve] = useState("");
   const [threatActors, setThreatActors] = useState("");
 
-  const overviewEditorRef = useRef(null);
-  const iocEditorRef = useRef(null);
-
-  // Initialize Quill editor instances
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      // Initialize Quill only in the client-side environment
-      const overviewEditor = new Quill(overviewEditorRef.current, {
-        theme: "snow",
-        placeholder: "Enter overview...",
-        modules: {
-          toolbar: [
-            [{ font: [] }],
-            [{ list: "ordered" }, { list: "bullet" }],
-            [{ align: [] }],
-            ["bold", "italic", "underline", "strike"],
-            [{ color: [] }, { background: [] }],
-            ["link"],
-          ],
-        },
-      });
-
-      overviewEditor.on("text-change", () => {
-        setOverview(overviewEditor.root.innerHTML); // Update the state with HTML content
-      });
-
-      const iocEditor = new Quill(iocEditorRef.current, {
-        theme: "snow",
-        placeholder: "Enter IOC's...",
-        modules: {
-          toolbar: [
-            [{ font: [] }],
-            [{ list: "ordered" }, { list: "bullet" }],
-            [{ align: [] }],
-            ["bold", "italic", "underline", "strike"],
-            [{ color: [] }, { background: [] }],
-            ["link"],
-          ],
-        },
-      });
-
-      iocEditor.on("text-change", () => {
-        setIoc(iocEditor.root.innerHTML); // Update the state with HTML content
-      });
-    }
-  }, []);
-
   // Handle form submission
   const handleAdd = () => {
     console.log("Overview Content:", overview);
@@ -88,7 +41,6 @@ const CreateIntelligence = () => {
     // router.push("/reports"); // Uncomment this line if you want to redirect
   };
 
-  // Dropdown options
   const options = {
     actorType: [
       { label: "Actor 1", value: "actor1" },
@@ -132,7 +84,16 @@ const CreateIntelligence = () => {
       { label: "Actor 2", value: "actor2" },
     ],
   };
-
+  const quillModules = {
+    toolbar: [
+      [{ font: [] }],
+      [{ list: "ordered" }, { list: "bullet" }],
+      [{ align: [] }],
+      ["bold", "italic", "underline", "strike"],
+      [{ color: [] }, { background: [] }],
+      ["link"],
+    ],
+  };
   return (
     <div className="sm:p-10 p-5 bg-white rounded-md text-black">
       {/* Header */}
@@ -147,7 +108,6 @@ const CreateIntelligence = () => {
           Create your own Intelligence to
         </h3>
       </div>
-
       {/* Form Section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-y-10 sm:gap-5">
         {/* Left Section: Dropdowns */}
@@ -167,7 +127,6 @@ const CreateIntelligence = () => {
               className="w-full"
             />
           </div>
-
           {/* Target Sector */}
           <div>
             <label
@@ -183,7 +142,6 @@ const CreateIntelligence = () => {
               className="w-full"
             />
           </div>
-
           {/* Target Location */}
           <div>
             <label
@@ -199,7 +157,6 @@ const CreateIntelligence = () => {
               className="w-full"
             />
           </div>
-
           {/* Tactic */}
           <div>
             <label
@@ -215,7 +172,6 @@ const CreateIntelligence = () => {
               className="w-full"
             />
           </div>
-
           {/* Technique */}
           <div>
             <label
@@ -231,7 +187,6 @@ const CreateIntelligence = () => {
               className="w-full"
             />
           </div>
-
           {/* Sub Technique */}
           <div>
             <label
@@ -247,7 +202,6 @@ const CreateIntelligence = () => {
               className="w-full"
             />
           </div>
-
           {/* Threat Level */}
           <div>
             <label
@@ -263,7 +217,6 @@ const CreateIntelligence = () => {
               className="w-full"
             />
           </div>
-
           {/* Motivations */}
           <div>
             <label
@@ -279,23 +232,21 @@ const CreateIntelligence = () => {
               className="w-full"
             />
           </div>
-
-          {/* Related CVE */}
+          {/* Related CVEs */}
           <div>
             <label
               htmlFor="relatedCve"
               className="text-md text-[#2F90B0] mb-4 font-semibold"
             >
-              Related CVE
+              Related CVEs
             </label>
             <Select
               options={options.relatedCve}
-              placeholder="Select Related CVE"
+              placeholder="Select Related CVEs"
               onSelect={setRelatedCve}
               className="w-full"
             />
           </div>
-
           {/* Threat Actors */}
           <div>
             <label
@@ -313,43 +264,48 @@ const CreateIntelligence = () => {
           </div>
         </div>
 
-        {/* Right Section: Text Editors */}
-        <div className="col-span-2">
-          {/* Overview Editor */}
-          <div className="space-y-4">
-            <label
-              htmlFor="overview"
-              className="text-md text-[#2F90B0] mb-4 font-semibold"
-            >
-              Overview
-            </label>
-            <div ref={overviewEditorRef} className="border p-2"></div>
+        {/* Right Section: Editor */}
+        <div className="col-span-2 space-y-4">
+          {/* Overview */}
+          <div>
+            <h4 className="font-bold text-[#2F90B0] text-[22px] mb-2">
+              Add Overview
+            </h4>
+            <ReactQuill
+              value={overview}
+              onChange={setOverview}
+              modules={quillModules}
+              placeholder="Enter overview..."
+            />
           </div>
 
-          {/* IOC Editor */}
-          <div className="space-y-4">
-            <label
-              htmlFor="ioc"
-              className="text-md text-[#2F90B0] mb-4 font-semibold"
+          {/* IOC */}
+          <div>
+            <h4 className="font-bold text-[#2F90B0] text-[22px] mb-2">
+              Add Indicators
+            </h4>
+            <ReactQuill
+              value={ioc}
+              onChange={setIoc}
+              modules={quillModules}
+              placeholder="Enter IOC's..."
+            />
+          </div>
+
+          {/* Submit Button */}
+
+          <div className="w-full flex justify-end">
+            <button
+              onClick={handleAdd}
+              className="mt-4 px-4 py-2 text-white bg-[#2F90B0] rounded-md"
             >
-              IOCs
-            </label>
-            <div ref={iocEditorRef} className="border p-2"></div>
+              Add
+            </button>
           </div>
         </div>
       </div>
 
-      {/* Submit Button */}
-      <div className="flex justify-end mt-6">
-        <button
-          onClick={handleAdd}
-          className="bg-[#2F90B0] text-white py-2 px-4 rounded-md"
-        >
-          Save Intelligence
-        </button>
-      </div>
-
-      {/* Toast Notifications */}
+      {/* Toast Notification */}
       <Toaster />
     </div>
   );

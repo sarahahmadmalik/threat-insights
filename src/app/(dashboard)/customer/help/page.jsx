@@ -3,66 +3,38 @@
 import Image from "next/image";
 import toast, { Toaster } from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import dynamic from "next/dynamic";
 
-// Dynamically import the Quill editor, only in the client side to avoid SSR issues
-const Quill = dynamic(() => import("quill"), { ssr: false });
-import "quill/dist/quill.snow.css";
+// Dynamically import ReactQuill to ensure it only renders on the client-side
+const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
+import "react-quill-new/dist/quill.snow.css";
 
 export default function SupportTicket() {
   const router = useRouter();
-  const quillRef = useRef(null); // Ref for the Quill editor container
-  const fileInputRef = useRef(null); // Ref for the file input
-
-  const [file, setFile] = useState(null); // State to manage the file upload
-
-  useEffect(() => {
-    if (quillRef.current && Quill) {
-      // Initialize Quill editor only on the client side
-      const quill = new Quill(quillRef.current, {
-        theme: "snow", // Quill's snow theme
-        placeholder: "Enter issue details",
-        modules: {
-          toolbar: [
-            ["bold", "italic", "underline"], // Text formatting
-            [{ list: "ordered" }, { list: "bullet" }], // Lists
-            ["link", "image"], // Media
-          ],
-        },
-      });
-
-      // Optional: You can save the Quill instance for later use
-      quillRef.current.quillInstance = quill;
-    }
-  }, []);
+  const [issueDetails, setIssueDetails] = useState(""); // State for Quill editor content
+  const [issueTitle, setIssueTitle] = useState(""); // State for issue title
 
   const handleSubmit = (e) => {
-    e.preventDefault(); // Prevent default form submission behavior
+    e.preventDefault();
 
-    // Get the content of the Quill editor
-    const quillInstance = quillRef.current?.quillInstance;
-    const details = quillInstance?.root.innerHTML;
-
-    if (!details || details.trim() === "<p><br></p>") {
+    if (!issueDetails || issueDetails.trim() === "<p><br></p>") {
       toast.error("Please provide details about your issue.");
       return;
     }
 
     toast.success("Your support ticket has been submitted successfully!", {
-      duration: 4000, // Toast duration in milliseconds
+      duration: 4000,
     });
 
-    // Optionally, handle further form submission logic
     console.log({
-      issueTitle: e.target["issue-title"].value,
-      issueDetails: details, // Raw HTML content of the Quill editor
+      issueTitle: issueTitle.trim(),
+      issueDetails,
     });
   };
 
   return (
     <div className="sm:p-10 p-5 bg-white rounded-md text-black">
-      {/* Include the Toaster for displaying notifications */}
       <Toaster position="top-right" reverseOrder={false} />
       <div>
         <button onClick={() => router.push("/customer/home")} className="mb-3">
@@ -71,7 +43,6 @@ export default function SupportTicket() {
       </div>
 
       <div className="w-full flex sm:items-start flex-col sm:flex-row sm:gap-x-5 justify-start">
-        {/* Header Section */}
         <div className="flex items-center gap-x-2 mb-4 ml-6">
           <Image
             src="/icons/help-icon.svg"
@@ -88,7 +59,6 @@ export default function SupportTicket() {
             Open a Support Ticket
           </h1>
           <form className="mt-6 space-y-4 w-full" onSubmit={handleSubmit}>
-            {/* Issue Title */}
             <div>
               <label
                 htmlFor="issue-title"
@@ -102,10 +72,11 @@ export default function SupportTicket() {
                 className="mt-1 block w-full px-3 py-2 border rounded-lg shadow-sm focus:ring-blue-500 focus:ring-2 transition-all duration-300 ease-in-out focus:outline-none border-gray-300"
                 placeholder="Enter issue title"
                 required
+                value={issueTitle}
+                onChange={(e) => setIssueTitle(e.target.value)}
               />
             </div>
 
-            {/* Issue Details with Quill Editor */}
             <div>
               <label
                 htmlFor="issue-details"
@@ -113,13 +84,22 @@ export default function SupportTicket() {
               >
                 Issue Details
               </label>
-              <div
-                ref={quillRef}
-                className="mt-1 block pl-3 w-full text-gray-700 bg-white shadow-sm border border-gray-300 focus:ring-blue-500 focus:outline-none h-[200px]"
-              ></div>
+              <ReactQuill
+                value={issueDetails}
+                onChange={setIssueDetails}
+                className="mt-1 bg-white shadow-sm border border-gray-300"
+                placeholder="Enter issue details"
+                modules={{
+                  toolbar: [
+                    ["bold", "italic", "underline"],
+                    [{ list: "ordered" }, { list: "bullet" }],
+                    ["link", "image"],
+                  ],
+                }}
+                theme="snow"
+              />
             </div>
 
-            {/* File Attachment */}
             <div>
               <label
                 htmlFor="file-upload"
@@ -136,7 +116,6 @@ export default function SupportTicket() {
               </div>
             </div>
 
-            {/* Submit Button */}
             <button
               type="submit"
               className="w-[150px] bg-[#2F90B0] text-white px-4 py-2 rounded-lg hover:bg-[#2F90B0] focus:outline-none focus:ring-2 focus:ring-[#2F90B0]"
