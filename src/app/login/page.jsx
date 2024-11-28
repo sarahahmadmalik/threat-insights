@@ -45,7 +45,12 @@ export default function LoginPage() {
     });
     // validateUsername();
     // validatePassword();
-    router.push("/customer/home");
+
+    const role = "admin";
+
+    role === "admin"
+      ? router.push(`/${role}/users`)
+      : router.push(`/${role}/home`);
   };
 
   return (

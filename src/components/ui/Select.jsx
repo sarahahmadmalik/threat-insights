@@ -4,9 +4,9 @@ import { useState, useRef } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 
-const Select = ({ options, placeholder, onSelect, className }) => {
+const Select = ({ options, placeholder, onSelect, className, selectValue }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selected, setSelected] = useState("");
+  const [selected, setSelected] = useState(selectValue || "");
   const dropdownRef = useRef(null);
 
   const handleSelect = (option) => {

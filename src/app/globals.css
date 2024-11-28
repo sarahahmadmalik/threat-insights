@@ -19,26 +19,32 @@ body {
   background: var(--background);
   font-family: Inter, Helvetica, sans-serif;
   box-sizing: border-box;
-
 }
-
-
 
 .ql-editor {
   font-family: Inter !important;
   padding-left: 0 !important;
 }
 
-.ql-editor p{
+.ql-editor p {
   padding-left: 10px !important;
   font-size: 16px !important;
 }
 
 .ql-editor::before {
-  font-size: 16px !important; 
+  font-size: 16px !important;
   color: #aeadad !important; /* Optional: Customize placeholder color */
 }
 
 .ql-container {
   min-height: 170px !important;
 }
+
+.td-class {
+  @apply px-4 py-4 bg-[#2323238A] first:rounded-tl-lg first:rounded-bl-lg last:rounded-tr-lg last:rounded-br-lg overflow-hidden whitespace-nowrap;
+}
+
+.th-class {
+  @apply px-4 py-4  first:rounded-tl-lg first:rounded-bl-lg last:rounded-tr-lg last:rounded-br-lg;
+}
+
