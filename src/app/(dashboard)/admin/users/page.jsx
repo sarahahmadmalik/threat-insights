@@ -18,6 +18,7 @@ const Users = () => {
       .map((_, i) => ({
         no: i + 1,
         username: "John",
+        password: "*******",
         email: `user${i}@gmail.com`,
         userType: "User",
         domains: [`example${i}.com`, `subdomain${i}.example.com`],
@@ -216,6 +217,7 @@ const Users = () => {
                   </th>
                   <th className="px-5 py-3 font-[400]">No</th>
                   <th className="px-5 py-3 font-[400]">Username</th>
+                  <th className="px-5 py-3 font-[400]">Password</th>
                   <th className="px-5 py-3 font-[400]">Email</th>
                   <th className="px-5 py-3 font-[400] text-center">
                     User type
@@ -245,6 +247,7 @@ const Users = () => {
                     </td>
                     <td className="td-class text-center">{user.no}</td>
                     <td className="td-class">{user.username}</td>
+                    <td className="td-class">{user.password}</td>
                     <td className="td-class">{user.email}</td>
                     <td className="td-class text-center">{user.userType}</td>
                     <td className="td-class overflow-hidden">
@@ -282,7 +285,7 @@ const Users = () => {
             ))}
             {currentPage < pages - 2 && <span className="px-4 py-2">...</span>}
             <button className="mx-3" onClick={handleNext}>
-              <Image src={"/next.svg"} height={10} width={10} alt={"icon"} />
+              <Image src={"/icons/next.svg"} height={10} width={10} alt={"icon"} />
             </button>
           </div>
         </div>
