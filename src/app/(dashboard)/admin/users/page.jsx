@@ -285,7 +285,12 @@ const Users = () => {
             ))}
             {currentPage < pages - 2 && <span className="px-4 py-2">...</span>}
             <button className="mx-3" onClick={handleNext}>
-              <Image src={"/icons/next.svg"} height={10} width={10} alt={"icon"} />
+              <Image
+                src={"/icons/next.svg"}
+                height={10}
+                width={10}
+                alt={"icon"}
+              />
             </button>
           </div>
         </div>
