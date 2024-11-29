@@ -14,7 +14,7 @@ const Sidebar = () => {
   ];
 
   return (
-    <div className="bg-gray-900 hidden lg:flex text-white w-64 items-center justify-center flex-col p-4">
+    <div className="bg-gray-900 hidden sm:min-w-[240px] lg:flex text-white w-64 items-center justify-center flex-col p-4">
       <ul className="space-y-8">
         {menuItems.map((item, index) => {
           // Check if the current route matches the menu item's href

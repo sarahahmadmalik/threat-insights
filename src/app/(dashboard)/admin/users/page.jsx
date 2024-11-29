@@ -31,7 +31,7 @@ const Users = () => {
   const [isEditUserOpen, setIsEditUserOpen] = useState(false);
   const [editUserData, setEditUserData] = useState(null);
 
-  const [selectedRows, setSelectedRows] = useState([]); 
+  const [selectedRows, setSelectedRows] = useState([]);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false); // State for delete confirmation popup
 
   const pages = Math.ceil(users.length / pageSize);
@@ -317,7 +317,12 @@ const Users = () => {
       {isPopupOpen && (
         <DomainPopup domains={selectedDomains} onClose={handleClosePopup} />
       )}
-      {isAddUserOpen && <AddUserPopup onClose={handleCloseAddUserPopup} />}
+      {isAddUserOpen && (
+        <AddUserPopup
+          isOpen={isAddUserOpen}
+          onClose={handleCloseAddUserPopup}
+        />
+      )}
       {isEditUserOpen && (
         <EditUserPopup
           isOpen={isEditUserOpen}
