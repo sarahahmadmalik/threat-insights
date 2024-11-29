@@ -31,7 +31,7 @@ const Users = () => {
   const [isEditUserOpen, setIsEditUserOpen] = useState(false);
   const [editUserData, setEditUserData] = useState(null);
 
-  const [selectedRows, setSelectedRows] = useState([]); // Track selected rows
+  const [selectedRows, setSelectedRows] = useState([]); 
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false); // State for delete confirmation popup
 
   const pages = Math.ceil(users.length / pageSize);
@@ -204,7 +204,7 @@ const Users = () => {
           <div className="overflow-auto rounded-lg shadow-md">
             <table className="w-full min-w-[700px] text-left border-separate border-spacing-y-2">
               <thead
-                className="shadow-md border-none "
+                className="shadow-md border-none"
                 style={{ backgroundColor: "#2F90B04D" }}
               >
                 <tr>
@@ -228,40 +228,58 @@ const Users = () => {
                 </tr>
               </thead>
               <tbody>
-                {currentUsers.map((user, idx) => (
-                  <tr
-                    key={idx}
-                    className={`hover:bg-gray-600 text-[#FFFFFFB2] ${
-                      user.isSelected ? "bg-gray-600" : "bg-[#2323238A]"
-                    }`}
-                  >
-                    <td className="td-class text-center">
-                      <input
-                        type="checkbox"
-                        checked={user.isSelected}
-                        onChange={() =>
-                          handleRowSelect((currentPage - 1) * pageSize + idx)
-                        }
-                        className="cursor-pointer"
-                      />
-                    </td>
-                    <td className="td-class text-center">{user.no}</td>
-                    <td className="td-class">{user.username}</td>
-                    <td className="td-class">{user.password}</td>
-                    <td className="td-class">{user.email}</td>
-                    <td className="td-class text-center">{user.userType}</td>
-                    <td className="td-class overflow-hidden">
-                      <div className="flex justify-center">
-                        <button
-                          className="text-blue-500 underline"
-                          onClick={() => handleViewDomains(user.domains)}
-                        >
-                          View Domains
-                        </button>
+                {currentUsers.length < 1 ? (
+                  <tr>
+                    <td colSpan={7} className="text-center p-6 bg-[#2323238A]">
+                      <div className="flex flex-col items-center">
+                        <Image
+                          src="/icons/no-data.svg"
+                          alt="No Data"
+                          width={100}
+                          height={100}
+                        />
+                        <p className="text-gray-500 mt-4 text-lg">
+                          No data available
+                        </p>
                       </div>
                     </td>
                   </tr>
-                ))}
+                ) : (
+                  currentUsers.map((user, idx) => (
+                    <tr
+                      key={idx}
+                      className={`hover:bg-gray-600 text-[#FFFFFFB2] ${
+                        user.isSelected ? "bg-gray-600" : "bg-[#2323238A]"
+                      }`}
+                    >
+                      <td className="td-class text-center">
+                        <input
+                          type="checkbox"
+                          checked={user.isSelected}
+                          onChange={() =>
+                            handleRowSelect((currentPage - 1) * pageSize + idx)
+                          }
+                          className="cursor-pointer"
+                        />
+                      </td>
+                      <td className="td-class text-center">{user.no}</td>
+                      <td className="td-class">{user.username}</td>
+                      <td className="td-class">{user.password}</td>
+                      <td className="td-class">{user.email}</td>
+                      <td className="td-class text-center">{user.userType}</td>
+                      <td className="td-class overflow-hidden">
+                        <div className="flex justify-center">
+                          <button
+                            className="text-blue-500 underline"
+                            onClick={() => handleViewDomains(user.domains)}
+                          >
+                            View Domains
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>
