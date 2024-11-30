@@ -4,22 +4,40 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import toast, { Toaster } from "react-hot-toast";
+import LoadingDots from "@/components/ui/LoadingDots";
+import { HiEye, HiEyeOff } from "react-icons/hi";
 
 export default function LoginPage() {
-  const [username, setUsername] = useState("");
+  const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState({ username: "", password: "" });
+  const [errors, setErrors] = useState({ identifier: "", password: "" });
   const [isTouched, setIsTouched] = useState({
-    username: false,
+    identifier: false,
     password: false,
   });
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
-  const validateUsername = () => {
-    if (!username) {
-      setErrors((prev) => ({ ...prev, username: "Username is required." }));
+  const validateIdentifier = () => {
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+
+    if (!identifier) {
+      setErrors((prev) => ({
+        ...prev,
+        identifier: "Username or Email is required.",
+      }));
+    } else if (
+      !emailRegex.test(identifier) &&
+      identifier.trim().includes(" ")
+    ) {
+      setErrors((prev) => ({
+        ...prev,
+        identifier: "Invalid username or email.",
+      }));
     } else {
-      setErrors((prev) => ({ ...prev, username: "" }));
+      setErrors((prev) => ({ ...prev, identifier: "" }));
     }
   };
 
@@ -36,27 +54,58 @@ export default function LoginPage() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Set touched to true when form is submitted
     setIsTouched({
-      username: true,
+      identifier: true,
       password: true,
     });
-    // validateUsername();
-    // validatePassword();
 
-    const role = "admin";
+    validateIdentifier();
+    validatePassword();
 
-    role === "admin"
-      ? router.push(`/${role}/users`)
-      : router.push(`/${role}/home`);
+    if (!identifier || !password || errors.identifier || errors.password) {
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/login`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ emailOrUsername: identifier, password }),
+        }
+      );
+
+      const data = await res.json();
+
+      console.log(data);
+
+      if (data.success) {
+        toast.success("Login Successful!");
+        // Redirect based on role using the session data received from the backend
+        const role = data.user.role;
+        role === "admin"
+          ? router.push(`/${role}/users`)
+          : router.push(`/${role}/home`);
+      } else {
+        toast.error(data.error || "Something went wrong!");
+      }
+    } catch (error) {
+      toast.error(error.error || "Something went wrong.");
+    }
+    setLoading(false);
   };
 
   return (
     <div className="min-h-screen flex flex-col items-center lg:items-start gap-y-[3rem] py-[3rem] px-5 lg:px-[3rem] relative">
+      <Toaster position="top-center" />
       <div
-        className="absolute   inset-0 bg-gradient-to-t from-[#1A2237] via-[#1A2237] to-transparent opacity-60"
+        className="absolute inset-0 bg-gradient-to-t from-[#1A2237] via-[#1A2237] to-transparent opacity-60"
         style={{
           backgroundImage: "url('/landing.svg')",
           backgroundSize: "cover",
@@ -73,25 +122,22 @@ export default function LoginPage() {
           className="object-contain"
         />
       </div>
-      <div className="w-full flex   items-center">
+      <div className="w-full flex items-center">
         <div className="flex items-center justify-center lg:justify-start w-full lg:w-4/5 xl:w-3/4 h-full">
-          {/* Login Box */}
           <div className="w-full max-w-lg py-8 px-6 lg:p-8 space-y-6 bg-white bg-opacity-10 backdrop-blur-md rounded-xl shadow-lg">
-            {/* Form Section */}
             <form onSubmit={handleSubmit} className="space-y-6 py-5">
-              {/* Username Field */}
               <div>
                 <div className="relative">
                   <input
                     type="text"
-                    placeholder="Username"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder="Username or Email"
+                    value={identifier}
+                    onChange={(e) => setIdentifier(e.target.value)}
                     onBlur={() =>
-                      setIsTouched((prev) => ({ ...prev, username: true }))
+                      setIsTouched((prev) => ({ ...prev, identifier: true }))
                     }
                     className={`w-full px-9 py-3 rounded-md bg-gray-800 text-white focus:outline-none transition-all duration-300 ease-in-out ${
-                      errors.username && isTouched.username
+                      errors.identifier && isTouched.identifier
                         ? "ring-2 ring-red-500"
                         : "focus:ring-2 focus:ring-blue-500"
                     }`}
@@ -99,20 +145,18 @@ export default function LoginPage() {
                   <span className="absolute left-3 top-[14px] text-gray-400">
                     <Image
                       src="/icons/user-icon.svg"
-                      alt="Username Icon"
+                      alt="Identifier Icon"
                       width={15}
                       height={15}
                     />
                   </span>
                 </div>
-                {errors.username && isTouched.username && (
+                {errors.identifier && isTouched.identifier && (
                   <p className="text-sm text-red-500 mt-2 ">
-                    {errors.username}
+                    {errors.identifier}
                   </p>
                 )}
               </div>
-
-              {/* Password Field */}
               <div>
                 <div className="relative">
                   <input
@@ -137,6 +181,17 @@ export default function LoginPage() {
                       height={20}
                     />
                   </span>
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                  >
+                    {showPassword ? (
+                      <HiEyeOff size={20} />
+                    ) : (
+                      <HiEye size={20} />
+                    )}
+                  </button>
                 </div>
                 {errors.password && isTouched.password && (
                   <p className="text-sm text-red-500 mt-2 ">
@@ -144,8 +199,6 @@ export default function LoginPage() {
                   </p>
                 )}
               </div>
-
-              {/* Remember Me and Forgot Password */}
               <div className="flex items-center justify-between">
                 <label className="flex items-center text-gray-400">
                   <input type="checkbox" className="mr-2" />
@@ -158,17 +211,17 @@ export default function LoginPage() {
                   Forgot password?
                 </Link>
               </div>
-
-              {/* Submit Button */}
               <button
                 type="submit"
+                disabled={loading}
                 className="w-full py-3 !mt-7 text-lg font-[500] text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-400 focus:ring-opacity-50 transition-transform transform hover:scale-105 active:scale-95"
               >
-                Sign In
+                <div className="flex w-full justify-center items-center gap-2">
+                  <p>Sign in</p>
+                  {loading ? <LoadingDots /> : ""}
+                </div>
               </button>
             </form>
-
-            {/* Sign-up Section */}
             <div className="text-center text-gray-400">
               <p>
                 Don&apos;t have an account?{" "}
@@ -177,16 +230,6 @@ export default function LoginPage() {
                 </Link>
               </p>
             </div>
-            {/* Notes Section */}
-            {/* <div className="pt-6 text-sm text-gray-500">
-              <p>** NOTES **</p>
-              <ul className="list-disc ml-4">
-                <li>Must be MFA/2FA for all users</li>
-                <li>Only allow 3 failed logins before account lock</li>
-                <li>Must withstand brute force attacks</li>
-                <li>Use generic error messages</li>
-              </ul>
-            </div> */}
           </div>
         </div>
       </div>

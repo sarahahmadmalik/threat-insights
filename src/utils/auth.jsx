@@ -1,28 +1,19 @@
 import { getSession } from "next-auth/react";
+import { parse } from "cookie";
+import jwt from "jsonwebtoken";
 
-// Check if the user is authenticated
-export const checkAuth = async (req) => {
-  const session = await getSession({ req });
 
-  if (!session) {
-    return { error: "User is not authenticated" };
+export const getSession = async (context) => {
+  const { req } = context;
+  const cookies = parse(req.headers.cookie || "");
+  const token = cookies.auth_token;
+
+  if (!token) return null;
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    return decoded; 
+  } catch (error) {
+    return null;
   }
-
-  return { session };
 };
-
-// Check if the user has a specific role
-export const checkRole = (session, requiredRole) => {
-  if (!session?.user?.role) {
-    return { error: "User role is not defined" };
-  }
-
-  if (session.user.role !== requiredRole) {
-    return { error: `Unauthorized access: User does not have ${requiredRole} privileges.` };
-  }
-
-  return { session };
-};
-
-
-
