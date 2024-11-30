@@ -70,4 +70,50 @@ body {
   background: #555;
 }
 
+/* Container for the loader dots */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px; /* Spacing between dots */
+}
 
+/* Keyframes for the loading animation */
+@keyframes loadingAnimation {
+  0% {
+    transform: scale(0.6);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.6);
+    opacity: 0.5;
+  }
+}
+
+/* Common styles for all dots */
+.loading-dot {
+  display: inline-block;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.838);
+  animation: loadingAnimation 1.5s infinite ease-in-out;
+}
+
+.loading-sm-dot {
+  width: 8px;
+  height: 8px;
+}
+
+.delay-1 {
+  animation-delay: 0.2s;
+}
+.delay-2 {
+  animation-delay: 0.4s;
+}
+
+.delay-3 {
+  animation-delay: 0.6s;
+}

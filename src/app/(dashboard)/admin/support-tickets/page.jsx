@@ -39,14 +39,32 @@ const Tickets = () => {
     }
   };
 
+  const handleBack = () => {
+    setCurrentPageIndex(1);
+  };
+
+  const handleNext = () => {
+    setCurrentPageIndex(totalPages);
+  };
+
+  const getPageNumbers = () => {
+    const pageNumbers = [];
+    let start = Math.max(1, currentPageIndex - 2);
+    let end = Math.min(totalPages, currentPageIndex + 2);
+
+    for (let i = start; i <= end; i++) {
+      pageNumbers.push(i);
+    }
+
+    return pageNumbers;
+  };
+
   const handleSelectAllRows = (isChecked) => {
     if (isChecked) {
-      const allCurrentPageTicketIds = currentPageTickets.map(
-        (ticket) => ticket.id
-      );
-      setSelectedTicketIds(allCurrentPageTicketIds);
+      const allTicketIds = tickets.map((ticket) => ticket.id); // Select all ticket IDs from the dataset
+      setSelectedTicketIds(allTicketIds);
     } else {
-      setSelectedTicketIds([]);
+      setSelectedTicketIds([]); // Deselect all rows
     }
   };
 
@@ -112,6 +130,10 @@ const Tickets = () => {
           className="p-6 rounded-[15px]"
           style={{ backgroundColor: "#2F90B026" }}
         >
+          <div className="mb-4 text-white">
+            {selectedTicketIds.length}{" "}
+            {selectedTicketIds.length === 1 ? "row" : "rows"} selected
+          </div>
           <div className="overflow-x-auto  rounded-lg shadow-md">
             <table className="w-full  text-left border-separate border-spacing-y-2">
               <thead
@@ -123,10 +145,8 @@ const Tickets = () => {
                     <input
                       type="checkbox"
                       checked={
-                        currentPageTickets.length > 0 &&
-                        currentPageTickets.every((ticket) =>
-                          selectedTicketIds.includes(ticket.id)
-                        )
+                        selectedTicketIds.length === tickets.length &&
+                        tickets.length > 0
                       }
                       onChange={(e) => handleSelectAllRows(e.target.checked)}
                     />
@@ -194,6 +214,35 @@ const Tickets = () => {
                 ))}
               </tbody>
             </table>
+          </div>
+          {/* Pagination */}
+          <div className="p-4 flex justify-end items-center space-x-2">
+            <button className="mx-3" onClick={handleBack}>
+              <Image src={"/back.svg"} height={10} width={10} alt={"icon"} />
+            </button>
+            {currentPageIndex > 3 && <span className="px-4 py-2">...</span>}
+            {getPageNumbers().map((page) => (
+              <button
+                key={page}
+                className={`flex items-center justify-center w-[20px] h-[20px] rounded-full ${
+                  currentPageIndex === page ? "bg-[#2F90B0] text-white" : ""
+                }`}
+                onClick={() => handlePageChange(page)}
+              >
+                {page}
+              </button>
+            ))}
+            {currentPageIndex < totalPages - 2 && (
+              <span className="px-4 py-2">...</span>
+            )}
+            <button className="mx-3" onClick={handleNext}>
+              <Image
+                src={"/icons/next.svg"}
+                height={10}
+                width={10}
+                alt={"icon"}
+              />
+            </button>
           </div>
         </div>
 
