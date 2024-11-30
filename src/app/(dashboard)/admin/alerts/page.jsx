@@ -185,7 +185,7 @@ const Alerts = () => {
             {selectedAlertIds.length === 1 ? "row" : "rows"} selected
           </div>
           {/* Responsive Table Wrapper */}
-          <div className="overflow-auto rounded-lg shadow-md">
+          <div className="overflow-x-auto rounded-lg shadow-md">
             <table className="w-full min-w-[700px] text-left border-separate border-spacing-y-2">
               <thead
                 className="shadow-md border-none"

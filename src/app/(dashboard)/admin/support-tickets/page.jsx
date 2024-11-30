@@ -94,7 +94,7 @@ const Tickets = () => {
   return (
     <AdminLayout>
       <Toaster position="top-center" />
-      <div className="shadow rounded-lg py-6">
+      <div className="shadow rounded-lg py-6 ">
         <div className="p-4 flex w-full justify-end">
           <button
             className={`bg-red-500 rounded-full flex items-center justify-center w-[45px] h-[45px] text-white border-2 border-white px-3 py-1 ${
@@ -112,7 +112,7 @@ const Tickets = () => {
           className="p-6 rounded-[15px]"
           style={{ backgroundColor: "#2F90B026" }}
         >
-          <div className="overflow-x-scroll  rounded-lg shadow-md">
+          <div className="overflow-x-auto  rounded-lg shadow-md">
             <table className="w-full  text-left border-separate border-spacing-y-2">
               <thead
                 className="shadow-md border-none"
@@ -174,7 +174,7 @@ const Tickets = () => {
                     <td className="td-class">{ticket.date}</td>
                     <td className="td-class text-center">
                       <button
-                        className="text-blue-500 underline"
+                        className="text-blue-500 underline underline-offset-4"
                         onClick={() =>
                           router.push(`/admin/support-tickets/${ticket.id}`)
                         }

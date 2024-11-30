@@ -48,3 +48,26 @@ body {
   @apply px-4 py-4  first:rounded-tl-lg first:rounded-bl-lg last:rounded-tr-lg last:rounded-br-lg;
 }
 
+/* width and height of the scrollbar */
+::-webkit-scrollbar {
+  width: 6px; /* for vertical scrollbar */
+  height: 6px; /* for horizontal scrollbar */
+}
+
+/* background of the scrollbar track */
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* scrollbar handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px; /* rounded corners */
+}
+
+/* scrollbar handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+

@@ -270,7 +270,7 @@ const Users = () => {
                       <td className="td-class overflow-hidden">
                         <div className="flex justify-center">
                           <button
-                            className="text-blue-500 underline"
+                            className="text-blue-500 underline underline-offset-4"
                             onClick={() => handleViewDomains(user.domains)}
                           >
                             View Domains

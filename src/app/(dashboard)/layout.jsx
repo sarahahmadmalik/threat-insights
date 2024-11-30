@@ -1,12 +1,13 @@
 "use client";
 import Image from "next/image";
 import { useState } from "react";
-import { createPortal } from "react-dom";
-import { useRouter } from "next/navigation";
+import Sidebar from "@/components/MobileSidebar";
 
 export default function Layout({ children }) {
-  const [isDropdownOpen, setDropdownOpen] = useState(false);
-  const router = useRouter();
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => setSidebarOpen(!isSidebarOpen);
+  const closeSidebar = () => setSidebarOpen(false);
 
   return (
     <div className="min-h-screen relative text-white">
@@ -21,66 +22,48 @@ export default function Layout({ children }) {
       ></div>
 
       {/* Header */}
-      <header className="flex  w-full justify-between items-center bg-white bg-opacity-10 backdrop-blur-md px-8 py-4 shadow-md">
-        {/* Logo */}
-        <div className="flex items-center space-x-2">
-          <Image
-            src="/logo.svg"
-            alt="Threat Insights Logo"
-            width={70} // Default width for small devices
-            height={50}
-            className="object-contain sm:w-70 md:w-40" // Responsive width
-          />
-        </div>
-
-        {/* Profile Dropdown */}
-        <div className="relative flex items-center space-x-4">
+      <header className="flex w-full justify-between items-center bg-white bg-opacity-10 backdrop-blur-md px-8 py-4 shadow-md">
+        {/* Hamburger Menu */}
+        <div className="flex items-center gap-x-5">
           <button
-            onClick={() => setDropdownOpen(!isDropdownOpen)}
-            className="flex items-center space-x-2 focus:outline-none"
+            onClick={toggleSidebar}
+            className="sm:hidden text-white text-2xl"
           >
-            <Image
-              src="/icons/user.svg"
-              alt="Profile"
-              width={40}
-              height={40}
-              className="rounded-full"
-            />
-            <span className="hidden sm:block">Welcome, [Mr. Jone]</span>
+            ☰
           </button>
 
-          {/* Dropdown (Responsive) */}
-          {isDropdownOpen &&
-            createPortal(
-              <div
-                className={`absolute overflow-hidden z-50 right-8 top-16 bg-white text-black rounded shadow-lg w-48 transition-transform duration-300 ease-out ${
-                  isDropdownOpen
-                    ? "transform opacity-100 translate-y-0"
-                    : "transform opacity-0 translate-y-4"
-                }`}
-              >
-                <ul>
-                  <li
-                    onClick={() => router.push("/customer/profile")}
-                    className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
-                  >
-                    Profile
-                  </li>
-                  <li
-                    onClick={() => router.push("/")}
-                    className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
-                  >
-                    Logout
-                  </li>
-                </ul>
-              </div>,
-              document.body
-            )}
+          {/* Logo */}
+          <div className="flex items-center space-x-2">
+            <Image
+              src="/logo.svg"
+              alt="Threat Insights Logo"
+              width={80}
+              height={60}
+              className="object-contain sm:w-70 md:w-40"
+            />
+          </div>
+        </div>
+
+        {/* Profile */}
+        <div className="relative flex items-center space-x-4">
+          <Image
+            src="/icons/user.svg"
+            alt="Profile"
+            width={40}
+            height={40}
+            className="rounded-full"
+          />
+          <span className="hidden sm:block">Welcome, [Mr. Jone]</span>
         </div>
       </header>
 
+      {/* Sidebar */}
+      <div className="sm:hidden">
+        <Sidebar isOpen={isSidebarOpen} closeSidebar={closeSidebar} />
+      </div>
+
       {/* Main Content */}
-      <main className="w-full p-6">{children}</main>
+      <main className="w-full p-3 sm:p-6">{children}</main>
     </div>
   );
 }

@@ -26,9 +26,9 @@ function CVE() {
 
   return (
     <AdminLayout>
-      <div className="px-3">
+      <div className="px-3 min-h-[400px]">
         <h1 className="text-2xl font-bold mb-6">Update CVE Database</h1>
-        <div className="flex space-x-4">
+        <div className="flex flex-col sm:flex-row space-y-5 sm:space-x-4">
           {/* Upload CVE Database Button */}
           <button
             onClick={() => document.getElementById("fileInput").click()}
