@@ -28,6 +28,7 @@ export const loginUser = async ({ emailOrUsername, password }) => {
       id: user._id,
       email: user.email,
       username: user.username,
+      name: user.name,
       role: user.role,
     },
     SECRET_KEY,

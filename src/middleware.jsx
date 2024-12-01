@@ -3,8 +3,8 @@ import { NextResponse } from "next/server";
 export async function middleware(req) {
   const { pathname } = req.nextUrl;
 
-
   const token = req.cookies.get("auth_token");
+  console.log(token);
 
   // Public routes (accessible to all)
   if (
@@ -20,6 +20,7 @@ export async function middleware(req) {
           method: "POST",
           body: JSON.stringify({ token }),
           headers: { "Content-Type": "application/json" },
+          credentials: "include",
         }
       );
 
@@ -91,5 +92,6 @@ export const config = {
     "/login",
     "/signup",
     "/forgot-password",
+    "/api/:path*",
   ],
 };

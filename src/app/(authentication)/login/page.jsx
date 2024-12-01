@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
 import LoadingDots from "@/components/ui/LoadingDots";
 import { HiEye, HiEyeOff } from "react-icons/hi";
+import Cookies from "js-cookie";
 
 export default function LoginPage() {
   const [identifier, setIdentifier] = useState("");
@@ -83,11 +84,12 @@ export default function LoginPage() {
 
       const data = await res.json();
 
-      console.log(data);
-
       if (data.success) {
         toast.success("Login Successful!");
-        // Redirect based on role using the session data received from the backend
+        Cookies.set("auth_token", data.token, { expires: 3, secure: false });
+        console.log("cookies", Cookies.get("auth_token"));
+
+        // Redirect based on role
         const role = data.user.role;
         role === "admin"
           ? router.push(`/${role}/users`)

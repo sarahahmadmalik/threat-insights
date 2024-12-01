@@ -19,16 +19,13 @@ export async function POST(req) {
       return NextResponse.json({ error: result.error }, { status: 400 });
     }
 
-    // Create the token cookie
     const cookie = serialize("auth_token", result.token, {
-      httpOnly: true, // Prevent client-side access to the cookie
-      secure: process.env.NODE_ENV === "production", // Secure only in production
-      sameSite: "strict", // Protect against CSRF
-      maxAge: 7 * 24 * 60 * 60,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 5 * 24 * 60 * 60, // 5 days in seconds
       path: "/",
     });
-
-    console.log(cookie);
 
     const response = NextResponse.json(
       { success: result.success, message: result.message, user: result.user },
