@@ -34,79 +34,64 @@ export default function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const validateUsername = () => {
-    if (!username) {
-      setErrors((prev) => ({ ...prev, username: "Username is required." }));
-    } else {
-      setErrors((prev) => ({ ...prev, username: "" }));
-    }
-  };
+  const validateAllFields = () => {
+    let updatedErrors = {};
+    let hasErrors = false;
 
-  const validateFullName = () => {
-    if (!fullName) {
-      setErrors((prev) => ({ ...prev, fullName: "Full name is required." }));
-    } else {
-      setErrors((prev) => ({ ...prev, fullName: "" }));
-    }
-  };
+    // Username validation: Check if it's not empty, doesn't contain hyphens, and has length between 3 and 20 characters
+    updatedErrors.username = !username
+      ? "Username is required."
+      : username.includes("-")
+      ? "Username should not contain hyphens."
+      : username.length < 3
+      ? "Username must be at least 3 characters."
+      : username.length > 20
+      ? "Username must be less than 20 characters."
+      : "";
 
-  const validateEmail = () => {
-    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-    if (!email) {
-      setErrors((prev) => ({ ...prev, email: "Email is required." }));
-    } else if (!emailRegex.test(email)) {
-      setErrors((prev) => ({ ...prev, email: "Invalid email address." }));
-    } else {
-      setErrors((prev) => ({ ...prev, email: "" }));
-    }
-  };
+    // Full Name validation: Check if it's not empty and has length between 3 and 50 characters
+    updatedErrors.fullName = !fullName
+      ? "Full name is required."
+      : fullName.length < 3
+      ? "Full name must be at least 3 characters."
+      : fullName.length > 50
+      ? "Full name must be less than 50 characters."
+      : "";
 
-  const validatePhone = () => {
-    const phoneRegex = /^\+([0-9]{1,4})\d{10}$/; // Country code: 1 to 4 digits, followed by exactly 10 digits for phone number
+    // Email validation: Check if it's not empty and is a valid email address
+    updatedErrors.email = !email
+      ? "Email is required."
+      : !/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/.test(email)
+      ? "Invalid email address."
+      : "";
 
-    if (!phone) {
-      setErrors((prev) => ({ ...prev, phone: "Phone number is required." }));
-    } else if (!phoneRegex.test(phone)) {
-      setErrors((prev) => ({
-        ...prev,
-        phone:
-          "Phone number must include a valid country code and a 10-digit phone number.",
-      }));
-    } else {
-      setErrors((prev) => ({ ...prev, phone: "" }));
-    }
-  };
+    // Phone validation: Check if it's not empty and is a valid phone number with country code
+    updatedErrors.phone = !phone
+      ? "Phone number is required."
+      : !/^\+([0-9]{1,4})\d{10}$/.test(phone)
+      ? "Phone number must include a valid country code and a 10-digit phone number."
+      : "";
 
-  const validatePassword = () => {
-    const passwordRegex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
-    if (!password) {
-      setErrors((prev) => ({ ...prev, password: "Password is required." }));
-    } else if (!passwordRegex.test(password)) {
-      setErrors((prev) => ({
-        ...prev,
-        password:
-          "Password must be at least 6 characters, including one uppercase letter, one lowercase letter, one number, and one special character.",
-      }));
-    } else {
-      setErrors((prev) => ({ ...prev, password: "" }));
-    }
-  };
+    // Password validation: Check if it's not empty and matches required pattern
+    updatedErrors.password = !password
+      ? "Password is required."
+      : !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/.test(
+          password
+        )
+      ? "Password must be at least 6 characters, including one uppercase letter, one lowercase letter, one number, and one special character."
+      : "";
 
-  const validateConfirmPassword = () => {
-    if (confirmPassword !== password) {
-      setErrors((prev) => ({
-        ...prev,
-        confirmPassword: "Passwords do not match.",
-      }));
-    } else {
-      setErrors((prev) => ({ ...prev, confirmPassword: "" }));
-    }
+    updatedErrors.confirmPassword =
+      confirmPassword !== password ? "Passwords do not match." : "";
+
+    hasErrors = Object.values(updatedErrors).some((error) => error);
+    setErrors(updatedErrors);
+
+    return hasErrors;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
 
     setIsTouched({
       username: true,
@@ -116,26 +101,14 @@ export default function SignUpPage() {
       password: true,
       confirmPassword: true,
     });
-    validateUsername();
-    validateFullName();
-    validateEmail();
-    validatePhone();
-    validatePassword();
-    validateConfirmPassword();
 
-    // If there are errors, return early
-    if (
-      errors.username ||
-      errors.fullName ||
-      errors.email ||
-      errors.phone ||
-      errors.password ||
-      errors.confirmPassword
-    ) {
-      return;
-    }
+    // console.log("validateAllFields;", validateAllFields())
+
+    if (validateAllFields()) return;
 
     // API call to register the user
+    setLoading(true);
+
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/signup`,
