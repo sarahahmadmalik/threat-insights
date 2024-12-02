@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import toast, { Toaster } from "react-hot-toast";
 
-export default function LayoutClient({ username, children }) {
+export default function LayoutClient({ username, role, children }) {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const router = useRouter();
@@ -99,7 +99,7 @@ export default function LayoutClient({ username, children }) {
               >
                 <ul>
                   <li
-                    onClick={() => router.push("/customer/profile")}
+                    onClick={() => router.push(`/${role}/profile`)}
                     className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
                   >
                     Profile

@@ -1,6 +1,6 @@
 "use client";
 
-import AdminLayout from "@/components/AdminLayout";
+import AdminLayout from "@/components/dashboard/admin/AdminLayout";
 import { useState } from "react";
 import Image from "next/image";
 import DeleteTicketPopup from "@/components/popups/DeleteTicketPopup";

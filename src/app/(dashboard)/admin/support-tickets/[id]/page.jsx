@@ -1,6 +1,6 @@
 "use client";
 
-import AdminLayout from "@/components/AdminLayout";
+import AdminLayout from "@/components/dashboard/admin/AdminLayout";
 import { useParams } from "next/navigation"; // Use useParams from next/navigation
 import { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";

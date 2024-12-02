@@ -1,12 +1,12 @@
-import LayoutClient from "@/components/LayoutClient";
+import LayoutClient from "@/components/dashboard/LayoutClient";
 import fetch from "node-fetch";
 import { cookies } from "next/headers";
 
 export default async function Layout({ children }) {
   let username = null;
+  let role = null;
   const cookieStore = await cookies();
   const token = cookieStore.get("auth_token");
-  // console.log(token)
 
   try {
     const response = await fetch(
@@ -21,11 +21,13 @@ export default async function Layout({ children }) {
 
     const data = await response.json();
     if (!data.error) {
-      username = data.decodedToken.username;
+      const fullName = data.decodedToken.name;
+      username = fullName.includes(" ") ? fullName.split(" ")[0] : fullName;
+      role = data.decodedToken.role;
     }
   } catch (error) {
     console.error("Error fetching username:", error);
   }
 
-  return <LayoutClient username={username}>{children}</LayoutClient>;
+  return <LayoutClient username={username} role={role}>{children}</LayoutClient>;
 }

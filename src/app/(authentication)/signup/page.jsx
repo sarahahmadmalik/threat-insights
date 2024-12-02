@@ -38,24 +38,28 @@ export default function SignUpPage() {
     let updatedErrors = {};
     let hasErrors = false;
 
-    // Username validation: Check if it's not empty, doesn't contain hyphens, and has length between 3 and 20 characters
+    // Username validation: Check if it's not empty, doesn't contain hyphens, doesn't contain spaces, and has length between 3 and 20 characters
     updatedErrors.username = !username
       ? "Username is required."
       : username.includes("-")
       ? "Username should not contain hyphens."
+      : username.includes(" ")
+      ? "Username should not contain spaces."
       : username.length < 3
       ? "Username must be at least 3 characters."
       : username.length > 20
       ? "Username must be less than 20 characters."
       : "";
 
-    // Full Name validation: Check if it's not empty and has length between 3 and 50 characters
+    // Full Name validation: Check if it's not empty, has length between 3 and 50 characters, and does not contain special characters or numbers
     updatedErrors.fullName = !fullName
       ? "Full name is required."
       : fullName.length < 3
       ? "Full name must be at least 3 characters."
       : fullName.length > 50
       ? "Full name must be less than 50 characters."
+      : /[^a-zA-Z\s]/.test(fullName)
+      ? "Full name should not contain numbers or special characters."
       : "";
 
     // Email validation: Check if it's not empty and is a valid email address
@@ -75,7 +79,7 @@ export default function SignUpPage() {
     // Password validation: Check if it's not empty and matches required pattern
     updatedErrors.password = !password
       ? "Password is required."
-      : !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/.test(
+      : !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_])[A-Za-z\d@$!%*?&_]{6,}$/.test(
           password
         )
       ? "Password must be at least 6 characters, including one uppercase letter, one lowercase letter, one number, and one special character."
