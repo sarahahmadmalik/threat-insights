@@ -218,7 +218,7 @@ const Alerts = ({ alerts }) => {
                     </td>
                   </tr>
                 ) : (
-                  currentPageUsers.map((user) => (
+                  currentPageUsers.map((user, idx) => (
                     <tr
                       key={user._id}
                       className={`hover:bg-gray-600 text-[#FFFFFFB2] ${

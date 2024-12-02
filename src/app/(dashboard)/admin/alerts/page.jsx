@@ -8,7 +8,7 @@ export default async function AlertsPage() {
     alertCounts = await AlertCount();
     if (alertCounts.error) {
       console.log(alertCounts.error);
-      AlertCounts = [];
+      alertCounts = [];
     }
   } catch (error) {
     console.error("Error fetching alert counts:", error);

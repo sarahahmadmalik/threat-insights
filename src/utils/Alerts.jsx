@@ -31,6 +31,7 @@ export const AlertCount = async () => {
       },
     ]);
 
+    console.log(alertCounts);
     return alertCounts;
   } catch (error) {
     console.log("Error fetching alert counts:", error);

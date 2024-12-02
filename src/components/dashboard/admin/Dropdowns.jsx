@@ -12,7 +12,7 @@ function Dropdowns() {
     { id: 3, title: "Threat Level", options: ["High", "Medium", "Low"] },
   ]);
 
-  const [selectedDropdown, setSelectedDropdown] = useState(null); // For popup
+  const [selectedDropdown, setSelectedDropdown] = useState(null); 
   const [showPopup, setShowPopup] = useState(false);
 
   const handleOpenPopup = (dropdown) => {
