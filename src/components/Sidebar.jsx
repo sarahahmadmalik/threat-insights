@@ -8,7 +8,7 @@ const Sidebar = () => {
     { name: "USERS", href: "/admin/users" },
     { name: "ALERTS", href: "/admin/alerts" },
     { name: "CVE's", href: "/admin/cves" },
-    { name: "Drop Downs", href: "/admin/drop-downs" },
+    { name: "Drop Downs", href: "/admin/dropdowns" },
     { name: "MITRE", href: "/admin/mitre" },
     { name: "SUPPORT TICKETS", href: "/admin/support-tickets" },
   ];
