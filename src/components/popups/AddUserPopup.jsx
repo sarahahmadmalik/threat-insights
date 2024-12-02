@@ -108,7 +108,7 @@ const AddUserPopup = ({ isOpen, onClose, loading, setLoad }) => {
   }
 
   const userTypeOptions = [
-    { label: "System Analyst", value: "system_analyst" },
+    { label: "System Analyst", value: "analyst" },
     { label: "Customer", value: "customer" },
   ];
 

@@ -182,19 +182,54 @@ const Users = ({ allUsers }) => {
     }
   };
 
+  const handleSaveEditUser = async (updatedUser) => {
+    setLoading(true);
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/users`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id: updatedUser._id,
+            name: updatedUser.name,
+            username: updatedUser.username,
+            email: updatedUser.email,
+            phone: updatedUser.phone,
+            role: updatedUser.role,
+          }),
+        }
+      );
+
+      const result = await response.json();
+
+      if (result.error) {
+        toast.error(
+          result.error || "An error occurred while updating the user."
+        );
+        console.log(result.error || "Failed to update user");
+        setLoading(false);
+        return;
+      }
+
+      setIsUserDataUpdated(true);
+
+      toast.success("User details updated successfully!");
+      handleCloseEditUserPopup();
+    } catch (error) {
+      toast.error("An error occurred while updating the user.");
+      console.log("Error updating user:", error);
+    }
+
+    setLoading(false); // Hide loading spinner after update is done
+  };
+
   const handleCloseEditUserPopup = () => {
     setIsEditUserOpen(false);
     setEditUserData(null);
-  };
-
-  const handleSaveEditUser = (updatedUser) => {
-    setUsers((prevUsers) =>
-      prevUsers.map((user) =>
-        user._id === updatedUser._id ? { ...user, ...updatedUser } : user
-      )
-    );
-    toast.success("User details updated successfully!");
-    handleCloseEditUserPopup();
   };
 
   const handleDeleteUsers = () => {
@@ -261,6 +296,8 @@ const Users = ({ allUsers }) => {
   };
 
   const isAnyRowSelected = selectedRows.length > 0;
+  const allowEdit = selectedRows.length === 1;
+  console.log("allowEdit", allowEdit);
 
   return (
     <AdminLayout>
@@ -278,10 +315,10 @@ const Users = ({ allUsers }) => {
             {/* Edit Button */}
             <button
               className={`bg-[#2F90B0] rounded-full flex items-center justify-center w-[45px] h-[45px] text-white border-2 border-white px-3 py-1 ${
-                !isAnyRowSelected ? "opacity-50 cursor-not-allowed" : ""
+                !allowEdit ? "opacity-50 cursor-not-allowed" : ""
               }`}
               onClick={handleOpenEditUserPopup}
-              disabled={!isAnyRowSelected}
+              disabled={!allowEdit}
             >
               <Image src="/icons/edit.svg" alt="Edit" width={35} height={35} />
             </button>
@@ -438,10 +475,10 @@ const Users = ({ allUsers }) => {
       )}
       {isEditUserOpen && (
         <EditUserPopup
+          loading={loading}
           isOpen={isEditUserOpen}
           userData={editUserData}
-          onClose={handleCloseEditUserPopup}
-          onSave={handleSaveEditUser}
+          onClose={handleSaveEditUser}
         />
       )}
 

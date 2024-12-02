@@ -52,3 +52,27 @@ export const deleteUsersByIds = async (ids) => {
     return { error: "Failed to delete users due to an internal server error" };
   }
 };
+
+export const updateUserById = async (id, updates) => {
+  try {
+    await db();
+
+    // Validate the ID and updates
+    if (!id || !updates || Object.keys(updates).length === 0) {
+      return { error: "Invalid ID or no updates provided" };
+    }
+
+    // Update user by ID
+    const result = await User.updateOne({ _id: id }, { $set: updates });
+
+    if (result.modifiedCount === 0) {
+      return { error: "No user found or no changes were made" };
+    }
+
+    return { message: "User updated successfully" };
+  } catch (error) {
+    console.error("Error in updating user:", error);
+    return { error: "Failed to update user due to an internal server error" };
+  }
+};
+
