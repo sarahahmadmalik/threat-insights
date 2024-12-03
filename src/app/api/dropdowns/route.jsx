@@ -1,5 +1,10 @@
 import { NextResponse } from "next/server";
-import { fetchDropdowns, createDropdown, updateDropdown } from "@/utils/dropdowns";
+import {
+  fetchDropdowns,
+  createDropdown,
+  updateDropdown,
+  deleteDropdown,
+} from "@/utils/dropdowns";
 
 // Fetch all dropdowns
 export async function GET() {
@@ -78,6 +83,37 @@ export async function PUT(req) {
     );
   } catch (error) {
     console.error("Error in updating dropdown:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
+  }
+}
+
+// Delete a dropdown by ID
+export async function DELETE(req) {
+  try {
+    const { _id } = await req.json();
+
+    if (!_id) {
+      return NextResponse.json({ error: "ID is required" }, { status: 400 });
+    }
+
+    const deletedDropdown = await deleteDropdown(_id);
+
+    if (deletedDropdown.error) {
+      return NextResponse.json(
+        { error: deletedDropdown.error },
+        { status: 400 }
+      );
+    }
+
+    return NextResponse.json(
+      { message: "Dropdown deleted successfully", data: deletedDropdown },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Error in deleting dropdown:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

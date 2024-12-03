@@ -47,73 +47,75 @@ export default function LayoutClient({ username, role, children }) {
       ></div>
 
       {/* Header */}
-      <header className="flex w-full justify-between items-center bg-white bg-opacity-10 backdrop-blur-md px-8 py-4 shadow-md">
-        {/* Hamburger Menu */}
-        <div className="flex items-center gap-x-5">
-          <button
-            onClick={toggleSidebar}
-            className="sm:hidden text-white text-2xl"
-          >
-            ☰
-          </button>
+      <header className="flex w-full justify-center items-center bg-white bg-opacity-10 backdrop-blur-md  shadow-md">
+        <div className="flex w-full justify-between px-8 py-4 items-center max-w-[1920px]">
+          {/* Hamburger Menu */}
+          <div className="flex items-center gap-x-5">
+            <button
+              onClick={toggleSidebar}
+              className="sm:hidden text-white text-2xl"
+            >
+              ☰
+            </button>
 
-          {/* Logo */}
-          <div className="flex items-center space-x-2">
-            <Image
-              src="/logo.svg"
-              alt="Logo"
-              width={80}
-              height={60}
-              className="object-contain sm:w-70 md:w-40"
-            />
+            {/* Logo */}
+            <div className="flex items-center space-x-2">
+              <Image
+                src="/logo.svg"
+                alt="Logo"
+                width={80}
+                height={60}
+                className="object-contain sm:w-70 md:w-40"
+              />
+            </div>
           </div>
-        </div>
 
-        {/* Profile Dropdown */}
-        <div className="relative flex items-center space-x-4">
-          <button
-            onClick={() => setDropdownOpen(!isDropdownOpen)}
-            className="flex items-center space-x-2 focus:outline-none"
-          >
-            <Image
-              src="/icons/user.svg"
-              alt="Profile"
-              width={40}
-              height={40}
-              className="rounded-full"
-            />
-            <span className="hidden sm:block">
-              Welcome, {username || "Guest"}
-            </span>
-          </button>
+          {/* Profile Dropdown */}
+          <div className="relative flex items-center space-x-4">
+            <button
+              onClick={() => setDropdownOpen(!isDropdownOpen)}
+              className="flex items-center space-x-2 focus:outline-none"
+            >
+              <Image
+                src="/icons/user.svg"
+                alt="Profile"
+                width={40}
+                height={40}
+                className="rounded-full"
+              />
+              <span className="hidden sm:block">
+                Welcome, {username || "Guest"}
+              </span>
+            </button>
 
-          {/* Dropdown */}
-          {isDropdownOpen &&
-            createPortal(
-              <div
-                className={`absolute overflow-hidden z-50 right-8 top-16 bg-white text-black rounded shadow-lg w-48 transition-transform duration-300 ease-out ${
-                  isDropdownOpen
-                    ? "transform opacity-100 translate-y-0"
-                    : "transform opacity-0 translate-y-4"
-                }`}
-              >
-                <ul>
-                  <li
-                    onClick={() => router.push(`/${role}/profile`)}
-                    className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
-                  >
-                    Profile
-                  </li>
-                  <li
-                    onClick={handleLogout}
-                    className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
-                  >
-                    Logout
-                  </li>
-                </ul>
-              </div>,
-              document.body
-            )}
+            {/* Dropdown */}
+            {isDropdownOpen &&
+              createPortal(
+                <div
+                  className={`absolute overflow-hidden z-50 right-8 top-16 bg-white text-black rounded shadow-lg w-48 transition-transform duration-300 ease-out ${
+                    isDropdownOpen
+                      ? "transform opacity-100 translate-y-0"
+                      : "transform opacity-0 translate-y-4"
+                  }`}
+                >
+                  <ul>
+                    <li
+                      onClick={() => router.push(`/${role}/profile`)}
+                      className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
+                    >
+                      Profile
+                    </li>
+                    <li
+                      onClick={handleLogout}
+                      className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
+                    >
+                      Logout
+                    </li>
+                  </ul>
+                </div>,
+                document.body
+              )}
+          </div>
         </div>
       </header>
 
@@ -123,7 +125,9 @@ export default function LayoutClient({ username, role, children }) {
       </div>
 
       {/* Main Content */}
-      <main className="w-full p-3 sm:p-6">{children}</main>
+      <main className="w-full flex justify-center items-center min-h-screen p-3 sm:p-6">
+        {children}
+      </main>
     </div>
   );
 }

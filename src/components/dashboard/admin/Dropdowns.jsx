@@ -6,6 +6,7 @@ import toast, { Toaster } from "react-hot-toast";
 import Image from "next/image";
 import AddDropdownPopup from "@/components/popups/AddDropdownPopup";
 import EditDropdownPopup from "@/components/popups/EditDropdownPopup";
+import DeleteDropdownPopup from "@/components/popups/DeleteDropdownPopup";
 
 function Dropdowns({ allDropdowns }) {
   const [dropdowns, setDropdowns] = useState(allDropdowns);
@@ -15,6 +16,7 @@ function Dropdowns({ allDropdowns }) {
   const [newDropdown, setNewDropdown] = useState({ title: "", options: [""] });
   const [isDataUpdated, setIsDataUpdated] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
 
   useEffect(() => {
     const updatedData = async () => {
@@ -53,24 +55,55 @@ function Dropdowns({ allDropdowns }) {
 
   const handleClosePopup = () => {
     setSelectedDropdown(null);
-    setShowPopup(false);
-    setIsCreatePopup(false);
-    setNewDropdown({ title: "", options: [""] });
+    setShowConfirmDelete(false);
   };
 
   const handleAddDropdown = () => {
     setIsCreatePopup(true);
   };
 
-  const handleDeleteDropdown = (id) => {
-    setDropdowns(dropdowns.filter((dropdown) => dropdown._id !== id));
-    toast.success("Dropdown Deleted Successfully");
-    handleClosePopup();
+  const handleDeleteDropdown = () => {
+    setShowPopup(false);
+    setShowConfirmDelete(true);
   };
 
   const handleCloseAddDropdownPopup = () => {
     setIsCreatePopup(false);
     setNewDropdown({ title: "", options: [""] });
+  };
+
+  const confirmDelete = async () => {
+    if (!selectedDropdown) return;
+
+    setLoading(true);
+    try {
+
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/dropdowns`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ _id: selectedDropdown._id }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!data.error) {
+        setIsDataUpdated(true);
+        setShowConfirmDelete(false);
+        setSelectedDropdown(null);
+        toast.success("Dropdown deleted successfully!");
+      } else {
+        toast.error(data.error || "Failed to delete dropdown");
+      }
+    } catch (error) {
+      console.error("Error deleting dropdown:", error);
+      toast.error("Internal server error");
+    }
+    setLoading(false);
   };
 
   const handleSaveAddDropdownPopup = async (dropdown) => {
@@ -108,7 +141,6 @@ function Dropdowns({ allDropdowns }) {
     }
     setLoading(false);
   };
-
 
   const handleSaveEditDropdown = async (updatedDropdown) => {
     setLoading(true);
@@ -213,6 +245,14 @@ function Dropdowns({ allDropdowns }) {
           onClose={handleCloseAddDropdownPopup}
           onSave={handleSaveAddDropdownPopup}
           isOpen={isCreatePopup}
+          loading={loading}
+        />
+      )}
+
+      {showConfirmDelete && (
+        <DeleteDropdownPopup
+          onDelete={confirmDelete}
+          onClose={handleClosePopup}
           loading={loading}
         />
       )}

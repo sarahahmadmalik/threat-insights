@@ -109,4 +109,28 @@ export const updateDropdown = async (_id, title, options) => {
   };
 
 
+// Function to delete a dropdown by its ID
+export const deleteDropdown = async (_id) => {
+    await db();
+  
+    try {
+      // Check if the ID is valid
+      if (!_id) {
+        throw new Error("Dropdown ID is required.");
+      }
+  
+      const deletedDropdown = await Dropdowns.findByIdAndDelete(_id);
+  
+      if (!deletedDropdown) {
+        throw new Error("Dropdown not found.");
+      }
+  
+      return deletedDropdown;
+    } catch (error) {
+      console.error("Error deleting dropdown:", error.message);
+      throw new Error(error.message || "Error deleting dropdown");
+    }
+  };
+  
+
   
