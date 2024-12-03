@@ -2,7 +2,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const Sidebar = () => {
-  const pathname = usePathname(); // Directly returns the current route string
+  const pathname = usePathname(); 
 
   const menuItems = [
     { name: "USERS", href: "/admin/users" },
