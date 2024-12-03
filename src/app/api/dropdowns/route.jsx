@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { fetchDropdowns, createDropdown } from "@/utils/dropdowns";
+import { fetchDropdowns, createDropdown, updateDropdown } from "@/utils/dropdowns";
 
 // Fetch all dropdowns
 export async function GET() {
@@ -51,61 +51,36 @@ export async function POST(req) {
   }
 }
 
-// // Update a dropdown by ID
-// export async function PUT(req) {
-//   try {
-//     const { id, title, options } = await req.json(); // Get the data from the request body
+// Update an existing dropdown
+export async function PUT(req) {
+  try {
+    const { _id, title, options } = await req.json();
 
-//     if (!id || !title || !options) {
-//       return NextResponse.json(
-//         { error: "ID, title, and options are required" },
-//         { status: 400 }
-//       );
-//     }
+    if (!_id || !title || !options) {
+      return NextResponse.json(
+        { error: "ID, title, and options are required" },
+        { status: 400 }
+      );
+    }
 
-//     const result = await updateDropdownById(id, { title, options });
+    const updatedDropdown = await updateDropdown(_id, title, options);
 
-//     if (result.error) {
-//       return NextResponse.json({ error: result.error }, { status: 500 });
-//     }
+    if (updatedDropdown.error) {
+      return NextResponse.json(
+        { error: updatedDropdown.error },
+        { status: 400 }
+      );
+    }
 
-//     return NextResponse.json(
-//       { message: "Dropdown updated successfully", data: result },
-//       { status: 200 }
-//     );
-//   } catch (error) {
-//     console.error("Error in updating dropdown:", error);
-//     return NextResponse.json(
-//       { error: "Internal server error" },
-//       { status: 500 }
-//     );
-//   }
-// }
-
-// // Delete a dropdown by ID
-// export async function DELETE(req) {
-//   try {
-//     const { id } = await req.json(); // Get the ID from request body
-
-//     if (!id) {
-//       return NextResponse.json(
-//         { error: "Dropdown ID is required" },
-//         { status: 400 }
-//       );
-//     }
-
-//     const result = await deleteDropdownById(id);
-
-//     if (result.error) {
-//       return NextResponse.json({ error: result.error }, { status: 500 });
-//     }
-
-//     return NextResponse.json({ message: "Dropdown deleted successfully" }, { status: 200 });
-//   } catch (error) {
-//     console.error("Error in deleting dropdown:", error);
-//     return NextResponse.json(
-//       { error: "Internal server error" },
-//       { status: 500 }
-//     );
-//   }
-// }
+    return NextResponse.json(
+      { message: "Dropdown updated successfully", data: updatedDropdown },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Error in updating dropdown:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
+  }
+}

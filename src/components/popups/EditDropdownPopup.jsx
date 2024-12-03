@@ -1,5 +1,7 @@
+"use client";
 import { useState } from "react";
 import Image from "next/image";
+import LoadingDots from "../ui/LoadingDots";
 
 function EditDropdownPopup({
   isOpen,
@@ -7,8 +9,10 @@ function EditDropdownPopup({
   onSave,
   dropdownData,
   onDelete,
+  loading,
 }) {
   const [editData, setEditData] = useState({
+    _id: dropdownData._id,
     title: dropdownData.title,
     options: [...dropdownData.options],
   });
@@ -48,7 +52,7 @@ function EditDropdownPopup({
     }
 
     onSave(editData);
-    onClose();
+    // onClose();
   };
 
   const handleDeleteOption = (index) => {
@@ -164,12 +168,15 @@ function EditDropdownPopup({
               onClick={handleSave}
               className="w-full py-3 bg-[#2F90B0] hover:bg-[#1f6780] text-white rounded-lg mt-4"
             >
-              Save
+              <div className="flex w-full justify-center items-center gap-2">
+                <p>Save</p>
+                {loading ? <LoadingDots /> : ""}
+              </div>
             </button>
 
             {/* Delete Dropdown Button */}
             <button
-              onClick={() => onDelete(dropdownData.id)}
+              onClick={() => onDelete(dropdownData)}
               className="bg-red-500 hover:bg-red-600 text-white px-4 py-3 rounded-md mt-4 w-full"
             >
               Delete Dropdown

@@ -109,16 +109,44 @@ function Dropdowns({ allDropdowns }) {
     setLoading(false);
   };
 
-  const handleSaveEditDropdown = (updatedDropdown) => {
-    // Update the dropdown with the new data
-    setDropdowns(
-      dropdowns.map((dropdown) =>
-        dropdown._id === updatedDropdown._id ? updatedDropdown : dropdown
-      )
-    );
-    // Close the popup after saving
-    setShowPopup(false);
-    toast.success("Dropdown updated successfully!");
+
+  const handleSaveEditDropdown = async (updatedDropdown) => {
+    setLoading(true);
+    try {
+      const updatedDropdownData = {
+        _id: updatedDropdown._id,
+        title: updatedDropdown.title,
+        options: updatedDropdown.options,
+      };
+
+      // Send the PUT request to the API
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/dropdowns`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updatedDropdownData),
+        }
+      );
+
+      const data = await response.json();
+      console.log(data);
+
+      if (!data.error) {
+        setLoading(false);
+        setIsDataUpdated(true);
+        setShowPopup(false);
+        toast.success("Dropdown updated successfully!");
+      } else {
+        toast.error(data.error || "Failed to update dropdown");
+      }
+    } catch (error) {
+      console.error("Error updating dropdown:", error);
+      toast.error("Internal server error");
+    }
+    setLoading(false);
   };
 
   return (
@@ -175,6 +203,7 @@ function Dropdowns({ allDropdowns }) {
           onSave={handleSaveEditDropdown}
           dropdownData={selectedDropdown}
           onDelete={handleDeleteDropdown}
+          loading={loading}
         />
       )}
 

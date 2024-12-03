@@ -59,3 +59,54 @@ export const fetchDropdowns = async () => {
     return { error };
   }
 };
+
+// Function to update a dropdown by its ID
+export const updateDropdown = async (_id, title, options) => {
+    await db();
+  
+    try {
+      // Validate title
+      if (!title) {
+        throw new Error("Title is required.");
+      }
+  
+      if (typeof title !== "string") {
+        throw new Error("Title must be a string.");
+      }
+  
+      // Validate options
+      if (!options || !Array.isArray(options)) {
+        throw new Error("Options must be an array.");
+      }
+  
+      if (options.length === 0) {
+        throw new Error("The options array must have at least one item.");
+      }
+  
+      // Validate each option
+      options.forEach((option, index) => {
+        if (typeof option !== "string" || option.trim().length === 0) {
+          throw new Error(`Option at index ${index} must be a non-empty string.`);
+        }
+      });
+  
+      // Find and update the dropdown by ID
+      const updatedDropdown = await Dropdowns.findByIdAndUpdate(
+        _id,
+        { title, options },
+        { new: true }
+      );
+  
+      if (!updatedDropdown) {
+        throw new Error("Dropdown not found.");
+      }
+  
+      return updatedDropdown;
+    } catch (error) {
+      console.error("Error updating dropdown:", error.message);
+      throw new Error(error.message || "Error updating dropdown");
+    }
+  };
+
+
+  
