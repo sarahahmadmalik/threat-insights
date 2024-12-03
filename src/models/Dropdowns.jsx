@@ -13,12 +13,12 @@ const dropdownSchema = new mongoose.Schema({
       validator: function (value) {
         return value.length > 0;
       },
-      message: "Options array must have at least one item",
+      message: "The options array must have at least one item.",
     },
   },
 });
 
-const Dropdown =
-  mongoose.models.Dropdown || mongoose.model("Dropdown", dropdownSchema);
+const Dropdowns =
+  mongoose.models.dropdowns || mongoose.model("dropdowns", dropdownSchema);
 
-export default Dropdown;
+export default Dropdowns;

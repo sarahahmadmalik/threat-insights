@@ -4,7 +4,7 @@ const alertSchema = new mongoose.Schema(
   {
     userID: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: "user",
       required: true,
     },
     title: { type: String, required: true },
@@ -23,6 +23,6 @@ const alertSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Alert = mongoose.models.Alert || mongoose.model("Alert", alertSchema);
+const Alerts = mongoose.models.alerts || mongoose.model("alerts", alertSchema);
 
-export default Alert;
+export default Alerts;

@@ -55,26 +55,7 @@ const Alerts = ({ alerts }) => {
     setCurrentPage(pages);
   };
 
-  const handleOpenAddAlertPopup = () => {
-    setAddAlertPopup(true);
-  };
 
-  const handleCloseAddAlertPopup = () => {
-    setAddAlertPopup(false);
-  };
-
-  const handleOpenEditUserPopup = () => {
-    const selectedAlerts = alertUsers.filter((user) =>
-      selectedAlertIds.includes(user._id)
-    );
-
-    if (selectedAlerts.length === 1) {
-      setAlertToEdit(selectedAlerts[0]);
-      setIsEditVisible(true);
-    } else {
-      toast.error("Please select only one row to edit!");
-    }
-  };
 
   const handleCloseEditAlertPopup = () => {
     setIsEditVisible(false);

@@ -1,5 +1,5 @@
 import db from "./db";
-import Alert from "@/models/Alerts";
+import Alerts from "@/models/Alerts";
 
 export const AlertCount = async () => {
   // Connect to the database
@@ -7,7 +7,7 @@ export const AlertCount = async () => {
 
   try {
     // Perform the aggregation query to count alerts per user
-    const alertCounts = await Alert.aggregate([
+    const alertCounts = await Alerts.aggregate([
       {
         $group: {
           _id: "$userID", // Group by userID

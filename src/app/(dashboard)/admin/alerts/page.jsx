@@ -1,5 +1,5 @@
 import Alerts from "@/components/dashboard/admin/Alerts";
-import { AlertCount } from "@/utils/Alerts";
+import { AlertCount } from "@/utils/alerts";
 
 export default async function AlertsPage() {
   let alertCounts = null;
@@ -14,6 +14,8 @@ export default async function AlertsPage() {
     console.error("Error fetching alert counts:", error);
     alertCounts = [];
   }
+
+  console.log("alertCount:", alertCounts)
 
   return (
     <>

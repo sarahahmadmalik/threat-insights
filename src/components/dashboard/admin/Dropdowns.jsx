@@ -1,19 +1,50 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AdminLayout from "@/components/dashboard/admin/AdminLayout";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import Image from "next/image";
+import AddDropdownPopup from "@/components/popups/AddDropdownPopup";
+import EditDropdownPopup from "@/components/popups/EditDropdownPopup";
 
-function Dropdowns() {
-  const [dropdowns, setDropdowns] = useState([
-    { id: 1, title: "Actor Type", options: ["Activist", "Hacktivist", "Insider"] },
-    { id: 2, title: "Target Sector", options: ["Finance", "Healthcare", "Technology"] },
-    { id: 3, title: "Threat Level", options: ["High", "Medium", "Low"] },
-  ]);
-
-  const [selectedDropdown, setSelectedDropdown] = useState(null); 
+function Dropdowns({ allDropdowns }) {
+  const [dropdowns, setDropdowns] = useState(allDropdowns);
+  const [selectedDropdown, setSelectedDropdown] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
+  const [isCreatePopup, setIsCreatePopup] = useState(false);
+  const [newDropdown, setNewDropdown] = useState({ title: "", options: [""] });
+  const [isDataUpdated, setIsDataUpdated] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const updatedData = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/dropdowns`,
+          {
+            method: "GET",
+          }
+        );
+
+        const data = await response.json();
+        if (!data.error) {
+          setDropdowns(data);
+          return data;
+        } else {
+          console.error("Error fetching users:", data.error);
+          return [];
+        }
+      } catch (error) {
+        console.error("Error fetching users:", error);
+        return [];
+      }
+    };
+
+    if (isDataUpdated) {
+      updatedData();
+      setIsDataUpdated(false);
+    }
+  }, [isDataUpdated]);
 
   const handleOpenPopup = (dropdown) => {
     setSelectedDropdown(dropdown);
@@ -23,29 +54,71 @@ function Dropdowns() {
   const handleClosePopup = () => {
     setSelectedDropdown(null);
     setShowPopup(false);
+    setIsCreatePopup(false);
+    setNewDropdown({ title: "", options: [""] });
   };
 
   const handleAddDropdown = () => {
-    const newDropdown = {
-      id: dropdowns.length + 1,
-      title: "New Dropdown",
-      options: [],
-    };
-    setDropdowns([...dropdowns, newDropdown]);
+    setIsCreatePopup(true);
   };
 
   const handleDeleteDropdown = (id) => {
-    setDropdowns(dropdowns.filter((dropdown) => dropdown.id !== id));
+    setDropdowns(dropdowns.filter((dropdown) => dropdown._id !== id));
+    toast.success("Dropdown Deleted Successfully");
     handleClosePopup();
   };
 
-  const handleEditDropdown = (updatedDropdown) => {
+  const handleCloseAddDropdownPopup = () => {
+    setIsCreatePopup(false);
+    setNewDropdown({ title: "", options: [""] });
+  };
+
+  const handleSaveAddDropdownPopup = async (dropdown) => {
+    setLoading(true);
+    try {
+      const newDropdownData = {
+        title: newDropdown.title,
+        options: newDropdown.options,
+      };
+
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/dropdowns`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(dropdown),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!data.error) {
+        setLoading(false);
+        handleCloseAddDropdownPopup();
+        setIsDataUpdated(true);
+        toast.success("Dropdown added successfully!");
+      } else {
+        toast.error(data.error || "Failed to add dropdown");
+      }
+    } catch (error) {
+      console.error("Error creating dropdown:", error);
+      toast.error("Internal server error");
+    }
+    setLoading(false);
+  };
+
+  const handleSaveEditDropdown = (updatedDropdown) => {
+    // Update the dropdown with the new data
     setDropdowns(
       dropdowns.map((dropdown) =>
-        dropdown.id === updatedDropdown.id ? updatedDropdown : dropdown
+        dropdown._id === updatedDropdown._id ? updatedDropdown : dropdown
       )
     );
-    handleClosePopup();
+    // Close the popup after saving
+    setShowPopup(false);
+    toast.success("Dropdown updated successfully!");
   };
 
   return (
@@ -57,9 +130,9 @@ function Dropdowns() {
             {/* Add Dropdown Button */}
             <button
               onClick={handleAddDropdown}
-              className="bg-[#8087C11F] flex items-center justify-center text-white px-3 py-1 w-[45px] h-[45px] border-2 border-white rounded-full"
+              className="bg-[#8087C11F] flex items-center  justify-center text-white px-3 py-1 w-[45px] h-[45px] border-2 border-white rounded-full"
             >
-              <Image src="/icons/add.svg" alt="Add" width={16} height={16} />
+              <Image src="/icons/add.svg" alt="Add" width={20} height={20} />
             </button>
           </div>
         </div>
@@ -68,52 +141,51 @@ function Dropdowns() {
           style={{ backgroundColor: "#2F90B026" }}
         >
           {/* Dropdown Buttons */}
-          {dropdowns.map((dropdown) => (
-            <button
-              key={dropdown.id}
-              onClick={() => handleOpenPopup(dropdown)}
-              className="bg-blue-500 text-white px-4 py-2 m-2 rounded-md"
-            >
-              {dropdown.title}
-            </button>
-          ))}
+          {dropdowns.length === 0 ? (
+            <div className="flex flex-col items-center rounded-[10px] justify-center h-[400px] ">
+              <Image
+                src="/icons/no-data.svg"
+                alt="No Data"
+                width={100}
+                height={100}
+              />
+              <p className="text-gray-500 mt-4 text-lg">
+                No dropdowns available
+              </p>
+            </div>
+          ) : (
+            // Dropdown Buttons
+            dropdowns.map((dropdown) => (
+              <button
+                key={dropdown._id}
+                onClick={() => handleOpenPopup(dropdown)}
+                className="bg-blue-500 text-white px-6 py-3 m-3 rounded-lg text-lg"
+              >
+                {dropdown.title}
+              </button>
+            ))
+          )}
         </div>
       </div>
 
-      {/* Popup */}
-      {showPopup && selectedDropdown && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white rounded-lg p-6 w-96">
-            <h2 className="text-xl font-bold mb-4">{selectedDropdown.title}</h2>
-            <ul className="mb-4">
-              {selectedDropdown.options.map((option, index) => (
-                <li key={index} className="text-gray-700">
-                  {option}
-                </li>
-              ))}
-            </ul>
-            <div className="flex justify-between">
-              <button
-                onClick={() => handleEditDropdown({ ...selectedDropdown, title: "Updated Title" })}
-                className="bg-yellow-500 text-white px-4 py-2 rounded-md"
-              >
-                Edit
-              </button>
-              <button
-                onClick={() => handleDeleteDropdown(selectedDropdown.id)}
-                className="bg-red-500 text-white px-4 py-2 rounded-md"
-              >
-                Delete
-              </button>
-              <button
-                onClick={handleClosePopup}
-                className="bg-gray-300 text-black px-4 py-2 rounded-md"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
+      {showPopup && (
+        <EditDropdownPopup
+          isOpen={showPopup}
+          onClose={() => setShowPopup(false)}
+          onSave={handleSaveEditDropdown}
+          dropdownData={selectedDropdown}
+          onDelete={handleDeleteDropdown}
+        />
+      )}
+
+      {/* Add Dropdown Popup */}
+      {isCreatePopup && (
+        <AddDropdownPopup
+          onClose={handleCloseAddDropdownPopup}
+          onSave={handleSaveAddDropdownPopup}
+          isOpen={isCreatePopup}
+          loading={loading}
+        />
       )}
     </AdminLayout>
   );

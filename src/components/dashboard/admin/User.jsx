@@ -33,7 +33,6 @@ const Users = ({ allUsers }) => {
   const [isEditUserOpen, setIsEditUserOpen] = useState(false);
   const [editUserData, setEditUserData] = useState(null);
   const [isUserDataUpdated, setIsUserDataUpdated] = useState(false);
-
   const [selectedRows, setSelectedRows] = useState([]);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
 
@@ -283,7 +282,6 @@ const Users = ({ allUsers }) => {
       setIsUserDataUpdated(true);
       setSelectedRows([]);
       setIsDeleteConfirmOpen(false);
-
       changePageOnDeletion();
 
       toast.success(result.message || "Selected users deleted successfully!");
