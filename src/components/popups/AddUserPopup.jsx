@@ -89,7 +89,7 @@ const AddUserPopup = ({ isOpen, onClose, loading, setLoad }) => {
       password,
       phone,
       role: userType,
-      // domains: userType !== "system_analyst" ? domains : "",
+      domains: userType !== "analyst" ? domains : "",
     };
 
     onClose(userData, true);
@@ -114,7 +114,7 @@ const AddUserPopup = ({ isOpen, onClose, loading, setLoad }) => {
 
   return (
     <div className="fixed inset-0 overflow-auto min-h-screen bg-black  bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white mt-[6rem]  p-8 rounded-[15px] w-96 max-w-xl">
+      <div className="bg-white mt-[15rem]  p-8 rounded-[15px] w-[460px] max-w-xl">
         <div className="flex justify-between items-center mb-4">
           <div className="w-full mt-6">
             <h2 className="text-lg sm:text-[22px] font-[700] text-center text-[#1E1E1E]">
@@ -282,7 +282,7 @@ const AddUserPopup = ({ isOpen, onClose, loading, setLoad }) => {
               </div>
               <ul className="space-y-2 mt-2">
                 {domains.map((domain, idx) => (
-                  <li key={idx} className="flex justify-between">
+                  <li key={idx} className="flex text-slate-600 justify-between">
                     {domain}
                     <button
                       onClick={() =>

@@ -39,6 +39,7 @@ export const createUserWithRole = async ({
   phone,
   name,
   role,
+  domains
 }) => {
   if (!username || !email || !password || !phone || !name) {
     return { success: false, error: "All fields are required" };
@@ -57,7 +58,8 @@ export const createUserWithRole = async ({
     password: hashedPassword,
     phone,
     name,
-    role
+    role,
+    domains
   });
 
   await newUser.save();

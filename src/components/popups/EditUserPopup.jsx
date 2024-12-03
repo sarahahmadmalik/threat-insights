@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import Select from "@/components/ui/Select";
 import LoadingDots from "../ui/LoadingDots";
 
-const EditUserPopup = ({ isOpen, onClose, loading, userData }) => {
+const EditUserPopup = ({ isOpen, onClose, loading, userData, onCancel }) => {
   const [fullName, setFullName] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -102,7 +102,10 @@ const EditUserPopup = ({ isOpen, onClose, loading, userData }) => {
       updatedPassword,
       phone,
       role: userType,
+      domains: domains,
     };
+
+    console.log("updatedUserData", updatedUserData);
 
     onClose(updatedUserData, true);
   };
@@ -118,7 +121,7 @@ const EditUserPopup = ({ isOpen, onClose, loading, userData }) => {
 
   return (
     <div className="fixed inset-0 overflow-auto min-h-screen bg-black  bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white mt-[6rem]  p-8 rounded-[15px] w-96 max-w-xl">
+      <div className="bg-white mt-[15rem]  p-8 rounded-[15px] w-[460px] max-w-xl">
         <div className="flex justify-between items-center mb-4">
           <div className="w-full mt-6">
             <h2 className="text-lg sm:text-[22px] font-[700] text-center text-[#1E1E1E]">
@@ -127,7 +130,7 @@ const EditUserPopup = ({ isOpen, onClose, loading, userData }) => {
           </div>
 
           <button
-            onClick={onClose}
+            onClick={onCancel}
             className="text-2xl flex items-center justify-center border-2 border-red-500 rounded-full px-2 w-[30px] h-[30px]  text-red-500 mb-10"
           >
             <p className="mt-[-2px]">&times;</p>
@@ -276,14 +279,22 @@ const EditUserPopup = ({ isOpen, onClose, loading, userData }) => {
                     Add
                   </button>
                 </div>
-                <div className="mt-2">
-                  {domains.map((domain, index) => (
-                    <span
-                      key={index}
-                      className="inline-block bg-gray-200 px-2 py-1 rounded-full text-sm mr-2 mb-2"
+                <div className="mt-2 flex flex-col space-y-3">
+                  {domains.map((domain, idx) => (
+                    <li
+                      key={idx}
+                      className="flex text-slate-600 justify-between"
                     >
                       {domain}
-                    </span>
+                      <button
+                        onClick={() =>
+                          setDomains(domains.filter((_, i) => i !== idx))
+                        }
+                        className="text-red-500 text-sm"
+                      >
+                        Remove
+                      </button>
+                    </li>
                   ))}
                 </div>
               </div>
@@ -296,7 +307,8 @@ const EditUserPopup = ({ isOpen, onClose, loading, userData }) => {
               onClick={handleSubmit}
               className="w-full py-3 bg-blue-500 text-white rounded-md"
             >
-              {loading ? <LoadingDots /> : "Save Changes"}
+              Save Changes
+              {loading ? <LoadingDots /> : ""}
             </button>
           </div>
         </div>

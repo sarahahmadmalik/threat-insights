@@ -74,7 +74,7 @@ export async function DELETE(request) {
 
 export async function POST(req) {
   try {
-    const { username, email, password, phone, name, role } = await req.json();
+    const { username, email, password, phone, name, role, domains } = await req.json();
 
     const result = await createUserWithRole({
       username,
@@ -83,6 +83,7 @@ export async function POST(req) {
       phone,
       name,
       role,
+      domains
     });
 
     // console.log(result);
@@ -105,7 +106,7 @@ export async function POST(req) {
 // Update user data by ID
 export async function PUT(request) {
   try {
-    const { id, username, email, phone, name, role } = await request.json();
+    const { id, username, email, phone, name, role, domains } = await request.json();
 
     if (!id) {
       return NextResponse.json(
@@ -131,6 +132,7 @@ export async function PUT(request) {
       phone,
       name,
       role,
+      domains
     });
 
     if (result.error) {

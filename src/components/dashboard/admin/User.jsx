@@ -200,6 +200,7 @@ const Users = ({ allUsers }) => {
             email: updatedUser.email,
             phone: updatedUser.phone,
             role: updatedUser.role,
+            domains: updatedUser.domains,
           }),
         }
       );
@@ -224,7 +225,8 @@ const Users = ({ allUsers }) => {
       console.log("Error updating user:", error);
     }
 
-    setLoading(false); // Hide loading spinner after update is done
+    setSelectedRows([])
+    setLoading(false); 
   };
 
   const handleCloseEditUserPopup = () => {
@@ -293,6 +295,13 @@ const Users = ({ allUsers }) => {
 
   const cancelDelete = () => {
     setIsDeleteConfirmOpen(false); // Close the delete confirmation popup
+    setSelectedRows([]);
+  };
+
+  const cancelEditPopup = () => {
+    setEditUserData(null);
+    setIsEditUserOpen(false);
+    setSelectedRows([]);
   };
 
   const isAnyRowSelected = selectedRows.length > 0;
@@ -479,6 +488,7 @@ const Users = ({ allUsers }) => {
           isOpen={isEditUserOpen}
           userData={editUserData}
           onClose={handleSaveEditUser}
+          onCancel={cancelEditPopup}
         />
       )}
 
