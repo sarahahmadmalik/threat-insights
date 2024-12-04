@@ -8,7 +8,7 @@ function EditDropdownPopup({
   onClose,
   onSave,
   dropdownData,
-  onDelete,
+  // onDelete,
   loading,
 }) {
   const [editData, setEditData] = useState({
@@ -175,12 +175,12 @@ function EditDropdownPopup({
             </button>
 
             {/* Delete Dropdown Button */}
-            <button
+            {/* <button
               onClick={() => onDelete(dropdownData)}
               className="bg-red-500 hover:bg-red-600 text-white px-4 py-3 rounded-md mt-4 w-full"
             >
               Delete Dropdown
-            </button>
+            </button> */}
           </div>
         </div>
       </div>
