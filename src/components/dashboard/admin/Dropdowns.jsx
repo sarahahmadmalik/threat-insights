@@ -12,11 +12,11 @@ function Dropdowns({ allDropdowns }) {
   const [dropdowns, setDropdowns] = useState(allDropdowns);
   const [selectedDropdown, setSelectedDropdown] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
-  const [isCreatePopup, setIsCreatePopup] = useState(false);
-  const [newDropdown, setNewDropdown] = useState({ title: "", options: [""] });
+  // const [isCreatePopup, setIsCreatePopup] = useState(false);
+  // const [newDropdown, setNewDropdown] = useState({ title: "", options: [""] });
   const [isDataUpdated, setIsDataUpdated] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
+  // const [showConfirmDelete, setShowConfirmDelete] = useState(false);
 
   useEffect(() => {
     const updatedData = async () => {
@@ -53,94 +53,94 @@ function Dropdowns({ allDropdowns }) {
     setShowPopup(true);
   };
 
-  const handleClosePopup = () => {
-    setSelectedDropdown(null);
-    setShowConfirmDelete(false);
-  };
+  // const handleClosePopup = () => {
+  //   setSelectedDropdown(null);
+  //   setShowConfirmDelete(false);
+  // };
 
-  const handleAddDropdown = () => {
-    setIsCreatePopup(true);
-  };
+  // const handleAddDropdown = () => {
+  //   setIsCreatePopup(true);
+  // };
 
-  const handleDeleteDropdown = () => {
-    setShowPopup(false);
-    setShowConfirmDelete(true);
-  };
+  // const handleDeleteDropdown = () => {
+  //   setShowPopup(false);
+  //   setShowConfirmDelete(true);
+  // };
 
-  const handleCloseAddDropdownPopup = () => {
-    setIsCreatePopup(false);
-    setNewDropdown({ title: "", options: [""] });
-  };
+  // const handleCloseAddDropdownPopup = () => {
+  //   setIsCreatePopup(false);
+  //   setNewDropdown({ title: "", options: [""] });
+  // };
 
-  const confirmDelete = async () => {
-    if (!selectedDropdown) return;
+  // const confirmDelete = async () => {
+  //   if (!selectedDropdown) return;
 
-    setLoading(true);
-    try {
+  //   setLoading(true);
+  //   try {
 
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/dropdowns`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ _id: selectedDropdown._id }),
-        }
-      );
+  //     const response = await fetch(
+  //       `${process.env.NEXT_PUBLIC_API_BASE_URL}/dropdowns`,
+  //       {
+  //         method: "DELETE",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify({ _id: selectedDropdown._id }),
+  //       }
+  //     );
 
-      const data = await response.json();
+  //     const data = await response.json();
 
-      if (!data.error) {
-        setIsDataUpdated(true);
-        setShowConfirmDelete(false);
-        setSelectedDropdown(null);
-        toast.success("Dropdown deleted successfully!");
-      } else {
-        toast.error(data.error || "Failed to delete dropdown");
-      }
-    } catch (error) {
-      console.error("Error deleting dropdown:", error);
-      toast.error("Internal server error");
-    }
-    setLoading(false);
-  };
+  //     if (!data.error) {
+  //       setIsDataUpdated(true);
+  //       setShowConfirmDelete(false);
+  //       setSelectedDropdown(null);
+  //       toast.success("Dropdown deleted successfully!");
+  //     } else {
+  //       toast.error(data.error || "Failed to delete dropdown");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error deleting dropdown:", error);
+  //     toast.error("Internal server error");
+  //   }
+  //   setLoading(false);
+  // };
 
-  const handleSaveAddDropdownPopup = async (dropdown) => {
-    setLoading(true);
-    try {
-      const newDropdownData = {
-        title: newDropdown.title,
-        options: newDropdown.options,
-      };
+  // const handleSaveAddDropdownPopup = async (dropdown) => {
+  //   setLoading(true);
+  //   try {
+  //     const newDropdownData = {
+  //       title: newDropdown.title,
+  //       options: newDropdown.options,
+  //     };
 
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/dropdowns`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(dropdown),
-        }
-      );
+  //     const response = await fetch(
+  //       `${process.env.NEXT_PUBLIC_API_BASE_URL}/dropdowns`,
+  //       {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify(dropdown),
+  //       }
+  //     );
 
-      const data = await response.json();
+  //     const data = await response.json();
 
-      if (!data.error) {
-        setLoading(false);
-        handleCloseAddDropdownPopup();
-        setIsDataUpdated(true);
-        toast.success("Dropdown added successfully!");
-      } else {
-        toast.error(data.error || "Failed to add dropdown");
-      }
-    } catch (error) {
-      console.error("Error creating dropdown:", error);
-      toast.error("Internal server error");
-    }
-    setLoading(false);
-  };
+  //     if (!data.error) {
+  //       setLoading(false);
+  //       handleCloseAddDropdownPopup();
+  //       setIsDataUpdated(true);
+  //       toast.success("Dropdown added successfully!");
+  //     } else {
+  //       toast.error(data.error || "Failed to add dropdown");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error creating dropdown:", error);
+  //     toast.error("Internal server error");
+  //   }
+  //   setLoading(false);
+  // };
 
   const handleSaveEditDropdown = async (updatedDropdown) => {
     setLoading(true);
@@ -186,15 +186,15 @@ function Dropdowns({ allDropdowns }) {
       <Toaster position="top-center" />
       <div className="shadow rounded-lg py-6">
         <div className="p-4 flex justify-between items-center">
-          <div className="flex justify-end w-full space-x-2">
-            {/* Add Dropdown Button */}
+          {/* <div className="flex justify-end w-full space-x-2">
+          
             <button
               onClick={handleAddDropdown}
               className="bg-[#8087C11F] flex items-center  justify-center text-white px-3 py-1 w-[45px] h-[45px] border-2 border-white rounded-full"
             >
               <Image src="/icons/add.svg" alt="Add" width={20} height={20} />
             </button>
-          </div>
+          </div> */}
         </div>
         <div
           className="p-6 rounded-[15px]"
@@ -234,13 +234,13 @@ function Dropdowns({ allDropdowns }) {
           onClose={() => setShowPopup(false)}
           onSave={handleSaveEditDropdown}
           dropdownData={selectedDropdown}
-          onDelete={handleDeleteDropdown}
+          // onDelete={handleDeleteDropdown}
           loading={loading}
         />
       )}
 
       {/* Add Dropdown Popup */}
-      {isCreatePopup && (
+      {/* {isCreatePopup && (
         <AddDropdownPopup
           onClose={handleCloseAddDropdownPopup}
           onSave={handleSaveAddDropdownPopup}
@@ -255,7 +255,7 @@ function Dropdowns({ allDropdowns }) {
           onClose={handleClosePopup}
           loading={loading}
         />
-      )}
+      )} */}
     </AdminLayout>
   );
 }
