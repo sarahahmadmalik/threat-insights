@@ -3,7 +3,7 @@ import { fetchTicketById } from "@/utils/tickets";
 import { NextResponse } from "next/server";
 
 export async function GET(req, { params }) {
-  const { id } = params;
+  const { id } = await params;
 
   try {
     const ticket = await fetchTicketById(id);
